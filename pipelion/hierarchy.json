@@ -1,0 +1,35 @@
+{
+	"root": "../production",
+	"children": [
+		{
+			"name": "house_interior_hallway_vacuum",
+			"type": "asset",
+			"location": "house/interior/hallway/vacuum"
+		},
+		{
+			"name": "house_interior_hallway_plantpile",
+			"type": "asset",
+			"location": "house/interior/hallway/plantpile"
+		},
+		{
+			"name": "office_interior_couch",
+			"type": "asset",
+			"location": "office/interior/couch"
+		},
+		{
+			"name": "A003",
+			"type": "shot",
+			"location": "shots/A003"
+		},
+		{
+			"name": "C004",
+			"type": "shot",
+			"location": "shots/C004"
+		},
+		{
+			"name": "D001",
+			"type": "shot",
+			"location": "shots/C004"
+		}
+	]
+}
