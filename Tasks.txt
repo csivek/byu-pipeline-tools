@@ -1,0 +1,11 @@
+Admin Console
+- Design
+- Layout Qt
+
+Configs for each asset (body.json)
+
+Assets Index (hierarchy.json)
+
+File I/O
+
+Get Snowman into pipelion with the correct file/folder structure

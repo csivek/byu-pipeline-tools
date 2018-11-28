@@ -1,0 +1,126 @@
+{
+	"production_root": "../../production",
+	"user_root": "../../users",
+	"show": {
+			"id":"dand",
+			"name":"Death and Delilah"
+	},
+	"programs": [
+		{
+			"id":"usd",
+			"name":"USDView",
+			"extension":"usd",
+			"icon":"icons/usd.png"
+		}
+		{
+			"id":"maya",
+			"name":"Maya",
+			"extension":"ma|mb",
+			"icon":"icons/maya.png"
+		},
+		{
+			"id":"hou",
+			"name":"Houdini",
+			"extension":"hip|hipnc",
+			"icon":"icons/houdini.png"
+		},
+		{
+			"id":"mari",
+			"name":"Mari",
+			"extension":"mari",
+			"icon":"icons/mari.png"
+		},
+		{
+			"id":"nuke",
+			"name":"Nuke",
+			"extension":"nk",
+			"icon":"icons/nuke.png"
+		},
+		{
+			"id":"file",
+			"name":"Extra Files",
+			"extension":"*",
+			"icon":"icons/file.png"
+		}
+	],
+	"departments": [
+		{
+			"id":"concept",
+			"name":"Concept Art",
+			"programs":"file",
+			"type":"asset"
+		},
+		{
+			"id":"model",
+			"name":"Modeling",
+			"programs": "maya hou",
+			"type":"asset"
+		},
+		{
+			"id":"rig",
+			"name":"Rigging",
+			"programs": "maya",
+			"type":"asset"
+		},
+		{
+			"id":"material",
+			"name":"Materials",
+			"programs": "maya hou",
+			"type":"asset"
+		},
+		{
+			"id":"groom",
+			"name":"Grooming",
+			"programs": "maya hou",
+			"type":"asset"
+		},
+		{
+			"id":"cloth",
+			"name":"Cloth",
+			"programs": "maya hou",
+			"type":"asset"
+		},
+		{
+			"id":"tool",
+			"name":"Tools",
+			"programs": "hou",
+			"type":"asset"
+		}
+		{
+			"id":"layout",
+			"name":"Layout",
+			"programs":"maya",
+			"type":"shot"
+		},
+		{
+			"id":"anim",
+			"name":"Animation",
+			"programs":"maya",
+			"type":"shot"
+		},
+		{
+			"id":"light",
+			"name":"Lighting",
+			"programs":"maya hou",
+			"type":"shot"
+		},
+		{
+			"id":"sim",
+			"name":"Simulation",
+			"programs":"maya hou",
+			"type":"shot"
+		},
+		{
+			"id":"fx",
+			"name":"VFX",
+			"programs":"hou",
+			"type":"shot"
+		},
+		{
+			"id":"comp",
+			"name":"Compositing",
+			"programs":"nuke",
+			"type":"shot"
+		}
+	]
+}

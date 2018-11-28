@@ -1,0 +1,27 @@
+{
+	"root": "production",
+	"children": [
+		"assets": [
+			{
+				"name": "house_interior_hallway_plantpile" 
+			},
+			{
+				"name": "house_interior_hallway_vacuum" 
+			},
+			{
+				"name": "office_interior_couch" 
+			}
+		]
+		"shots": [
+			{
+				"name": "A003" 
+			},
+			{ 
+				"name": "C004"
+			},
+			{ 
+				"name": "D001"
+			}
+		]
+	]
+}
