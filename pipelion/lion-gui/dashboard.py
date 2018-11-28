@@ -42,7 +42,7 @@ class Pipelion:
 
 
 	def startProgram(self):
-		self.app = QtGui.QApplication(sys.argv)
+		self.app = QtWidgets.QApplication(sys.argv)
 		self.main_window = MainWindow(self)
 		self.main_window.show()
 		self.app.exec_()
@@ -62,7 +62,7 @@ class ProgramBar(QtWidgets.QHBoxLayout):
         for program_button in program_buttons:
             self.addWidget(program_button)
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, pipelion):
 		self.pipelion = pipelion
 		super(MainWindow, self).__init__()
