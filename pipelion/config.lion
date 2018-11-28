@@ -11,7 +11,7 @@
 			"name":"USDView",
 			"extension":"usd",
 			"icon":"icons/usd.png"
-		}
+		},
 		{
 			"id":"maya",
 			"name":"Maya",
@@ -85,7 +85,13 @@
 			"name":"Tools",
 			"programs": "hou",
 			"type":"asset"
-		}
+		},
+		{
+			"id":"story",
+			"name":"Storyboards",
+			"programs":"file",
+			"type":"shot"
+		},
 		{
 			"id":"layout",
 			"name":"Layout",
