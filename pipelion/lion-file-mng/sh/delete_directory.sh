@@ -1,16 +1,13 @@
 #!/bin/bash
 
 PRODUCTION_ROOT="$1"
-NAME="$2"
-LOCATION="$3"
+LOCATION="$2"
 
 cd $PRODUCTION_ROOT
 
 if [ ! -d $LOCATION ]; then
-  mkdir -p $LOCATION
+  rm -r $LOCATION
 fi
 cd $LOCATION
-
-echo "" > "body.json"
 
 pwd
