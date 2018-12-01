@@ -27,7 +27,7 @@ class AssetEntry():
         self.steps = steps
         self.notes = notes
 
-class AssetTable(QtWidgets.QTableView):
+class AssetTable(QtWidgets.QTableWidget):
     # int, int, string[], AssetEntry[]
     def __init__(self, rowCount, columnCount, columnHeaders, assetEntries):
         QtWidgets.QTableView.__init__(self, rowCount, columnCount)
@@ -60,7 +60,7 @@ class TableContainer(QtWidgets.QWidget):
         table_view = QtWidgets.QTableView()
         table_view.setModel(table_model)
         # set font
-        font = QtGui.QFont("Courier New", 14)
+        font = QtGui.QFont("Courier New", 10)
         table_view.setFont(font)
         # set column width to fit contents (set font first!)
         table_view.resizeColumnsToContents()
@@ -86,7 +86,7 @@ class TableModel(QtCore.QAbstractTableModel):
             return None
         combobox = QtWidgets.QComboBox()
         combobox.addItem(str(self.mylist[index.row()][index.column()]))
-        return combobox
+        return str(self.mylist[index.row()][index.column()])
     def headerData(self, col, orientation, role):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
             return self.header[col]

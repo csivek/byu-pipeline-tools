@@ -16,11 +16,12 @@ from tableutils import *
 
 class Pipelion:
     def __init__(self):
+        self.pipelionDir = os.environ["BYU_TOOLS_DIR"] + "/pipelion"
         self.importLionFiles()
 
     def importLionFiles(self):
         # Import config.lion
-        self.config = json.loads(open("../config.lion").read())
+        self.config = json.loads(open(self.pipelionDir + "/config.lion").read())
 
         # Import show name, icon, etc
         self.show = self.config["show"]
@@ -41,7 +42,7 @@ class Pipelion:
             self.departments[department["id"]] = department
 
         # Import settings.lion
-        self.settings = json.loads(open("../settings.lion").read())
+        self.settings = json.loads(open(self.pipelionDir + "/settings.lion").read())
 
     def startProgram(self):
         self.app = QtWidgets.QApplication(sys.argv)
@@ -54,7 +55,7 @@ class ProgramButton(QtWidgets.QPushButton):
     def __init__(self, pipelion, program):
         self.pipelion = pipelion
         self.program = program
-        icon = QtGui.QIcon("../" + program["icon"])
+        icon = QtGui.QIcon(self.pipelion.pipelionDir + "/" + program["icon"])
         title = program["name"]
         super(ProgramButton, self).__init__(icon, title)
 
