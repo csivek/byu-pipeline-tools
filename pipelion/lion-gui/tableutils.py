@@ -183,14 +183,14 @@ class DefaultUserData():
         ('shots/c/004', ['htinney', 'kgraham','bdemann','csivek'], '', False, 12500408, '')
         ]
 
-class DefaultDeptData(department):
+class DefaultDeptData():
     def __init__(self):
         self.headers = self.headers()
         self.data = self.data()
     def headers(self):
         # the solvent data ...
         return ['Asset Name', 'Assigned Artist', 'View', 'Action']
-    def data(self):
+    def data(self, department):
         if (department == "model"):
             return [
             ('office/interior/chair', 'htinney', True, 'OPEN'),
