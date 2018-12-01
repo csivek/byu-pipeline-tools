@@ -56,18 +56,25 @@ class TableContainer(QtWidgets.QWidget):
         # setGeometry(x_pos, y_pos, width, height)
         #self.setGeometry(300, 200, 570, 450)
         self.setWindowTitle("Click on column title to sort")
-        table_model = TableModel(self, data_list, header)
-        table_view = QtWidgets.QTableView()
-        table_view.setModel(table_model)
+        table = QtWidgets.QTableWidget()
         # set font
         font = QtGui.QFont("Courier New", 10)
-        table_view.setFont(font)
+        table.setFont(font)
         # set column width to fit contents (set font first!)
-        table_view.resizeColumnsToContents()
+        table.setRowCount(len(data_list))
+        table.setColumnCount(len(header))
+        table.setHorizontalHeaderLabels(header)
+        for row in range(len(data_list)):
+            for elem in range(len(data_list[row])):
+                if (elem == 3):
+                    table.setCellWidget(row,elem,QtWidgets.QPushButton(str(data_list[row][elem])))
+                else:
+                    table.setItem(row,elem,QtWidgets.QTableWidgetItem(str(data_list[row][elem])))
+        table.resizeColumnsToContents()
         # enable sorting
-        table_view.setSortingEnabled(True)
+        table.setSortingEnabled(True)
         layout = QtWidgets.QVBoxLayout(self)
-        layout.addWidget(table_view)
+        layout.addWidget(table)
         self.setLayout(layout)
 
 class TableModel(QtCore.QAbstractTableModel):
