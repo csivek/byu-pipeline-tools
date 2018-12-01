@@ -15,6 +15,41 @@ except ImportError:
 # TODO: setIndexWidget for any data that is a button
 # https://stackoverflow.com/questions/4412796/qt-qtableview-clickable-button-in-table-row
 
+class TableUtils():
+    # Get assets from departments
+    def __init__(self):
+        self.thing = 0
+
+class AssetEntry():
+    def __init__(self, label, user, steps, notes):
+        self.label = label
+        self.user = user
+        self.steps = steps
+        self.notes = notes
+
+class AssetTable(QtWidgets.QTableView):
+    # int, int, string[], AssetEntry[]
+    def __init__(self, rowCount, columnCount, columnHeaders, assetEntries):
+        QtWidgets.QTableView.__init__(self, rowCount, columnCount)
+
+        self.setHorizontalHeaderLabels(columnHeaders)
+
+        for i in range(0,rowCount):
+            for j in range(0, columnCount):
+                entry = assetEntries[i]
+                widget = QtWidgets.QLabel("error")
+                if j == 0:
+                    widget = QtWidgets.QLabel(entry.label)
+                if j == 1:
+                    widget = QtWidgets.QLabel(entry.user)
+                if j > 1 and j < columnCount - 1:
+                    widget = QtWidgets.QCheckBox()
+                    widget.setChecked(entry.steps[j])
+                if j == columnCount - 1:
+                    widget = QtWidgets.QLineEdit(entry.notes)
+                self.setCellWidget(i, j, widget)
+
+
 class TableContainer(QtWidgets.QWidget):
     def __init__(self, data_list, header, *args):
         QtWidgets.QWidget.__init__(self, *args)
@@ -22,7 +57,7 @@ class TableContainer(QtWidgets.QWidget):
         #self.setGeometry(300, 200, 570, 450)
         self.setWindowTitle("Click on column title to sort")
         table_model = TableModel(self, data_list, header)
-        table_view = QtGui.QTableView()
+        table_view = QtWidgets.QTableView()
         table_view.setModel(table_model)
         # set font
         font = QtGui.QFont("Courier New", 14)
@@ -31,7 +66,7 @@ class TableContainer(QtWidgets.QWidget):
         table_view.resizeColumnsToContents()
         # enable sorting
         table_view.setSortingEnabled(True)
-        layout = QtGui.QVBoxLayout(self)
+        layout = QtWidgets.QVBoxLayout(self)
         layout.addWidget(table_view)
         self.setLayout(layout)
 

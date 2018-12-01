@@ -54,7 +54,7 @@ class ProgramButton(QtWidgets.QPushButton):
     def __init__(self, pipelion, program):
         self.pipelion = pipelion
         self.program = program
-        icon = QtWidgets.QIcon("../" + program["icon"])
+        icon = QtGui.QIcon("../" + program["icon"])
         title = program["name"]
         super(ProgramButton, self).__init__(icon, title)
 
@@ -105,7 +105,7 @@ class MainWindow(QtWidgets.QMainWindow):
         programBar = ProgramBar(self.pipelion, self, programButtons)
         dockable = QtWidgets.QDockWidget("", self)
         container = QtWidgets.QWidget()
-        container.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Maximum))
+        container.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,QtWidgets.QSizePolicy.Maximum))
         layout = QtWidgets.QHBoxLayout()
 
         for programButton in programButtons:
@@ -113,7 +113,7 @@ class MainWindow(QtWidgets.QMainWindow):
         container.setLayout(layout)
         dockable.setWidget(container)
         dockable.setFeatures(QtWidgets.QDockWidget.NoDockWidgetFeatures)
-        dockable.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Maximum))
+        dockable.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,QtWidgets.QSizePolicy.Maximum))
         dockable.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.addDockWidget(QtCore.Qt.TopDockWidgetArea, dockable)
 
