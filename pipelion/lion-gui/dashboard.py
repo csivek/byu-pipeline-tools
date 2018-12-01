@@ -3,50 +3,52 @@
 import sys
 import os
 try:
-	from PySide import QtGui as QtWidgets
-	from PySide import QtGui as QtGui
-	from PySide import QtCore
-	from PySide.QtCore import Slot
+    from PySide import QtGui as QtWidgets
+    from PySide import QtGui as QtGui
+    from PySide import QtCore
+    from PySide.QtCore import Slot
 except ImportError:
-	from PySide2 import QtWidgets, QtGui, QtCore
-	from PySide2.QtCore import Slot
+    from PySide2 import QtWidgets, QtGui, QtCore
+    from PySide2.QtCore import Slot
 
 import json
+from tableutils import *
 
 class Pipelion:
-	def __init__(self):
-		self.importLionFiles()
+    def __init__(self):
+        self.importLionFiles()
 
-	def importLionFiles(self):
-		# Import config.lion
-		self.config = json.loads(open("../config.lion").read())
+    def importLionFiles(self):
+        # Import config.lion
+        self.config = json.loads(open("../config.lion").read())
 
-		# Import show name, icon, etc
-		self.show = self.config["show"]
-		print("Show Name: " + self.show["name"])
+        # Import show name, icon, etc
+        self.show = self.config["show"]
+        print("Show Name: " + self.show["name"])
 
-		# Import a list of programs used in this show
-		self.programs = {}
-		print("Importing program list...")
-		for program in self.config["programs"]:
-			print(program["name"])
-			self.programs[program["id"]] = program
+        # Import a list of programs used in this show
+        self.programs = {}
+        print("Importing program list...")
+        for program in self.config["programs"]:
+            print(program["name"])
+            self.programs[program["id"]] = program
 
-		# Import a list of deparments in this show
-		self.departments = {}
-		print("Importing department list...")
-		for department in self.config["departments"]:
-			print(department["name"])
-			self.departments[department["id"]] = department
+        # Import a list of deparments in this show
+        self.departments = {}
+        print("Importing department list...")
+        for department in self.config["departments"]:
+            print(department["name"])
+            self.departments[department["id"]] = department
 
-		# Import settings.lion
-		self.settings = json.loads(open("../settings.lion").read())
+        # Import settings.lion
+        self.settings = json.loads(open("../settings.lion").read())
 
-	def startProgram(self):
-		self.app = QtWidgets.QApplication(sys.argv)
-		self.main_window = MainWindow(self)
-		self.main_window.show()
-		self.app.exec_()
+    def startProgram(self):
+        self.app = QtWidgets.QApplication(sys.argv)
+        self.app.setStyle("Plastique")
+        self.main_window = MainWindow(self)
+        self.main_window.show()
+        self.app.exec_()
 
 class ProgramButton(QtWidgets.QPushButton):
     def __init__(self, pipelion, program):
@@ -69,12 +71,16 @@ class ProgramBar(QtWidgets.QButtonGroup):
     def handle(self, index):
         self.main_window.startProgram(self.button(index).program)
 
+class BodyListItem():
+    def __init__(self):
+        print("thing")
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, pipelion):
-		self.pipelion = pipelion
-		super(MainWindow, self).__init__()
-		self.createPanes()
-		self.setWindowTitle("Pipelion")
+        self.pipelion = pipelion
+        super(MainWindow, self).__init__()
+        self.createPanes()
+        self.setWindowTitle("Pipelion")
 
     def createPanes(self):
         self.createProgramBar()
@@ -84,8 +90,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     @Slot(int)
     def startProgram(self, index):
-		print("called it")
-		print(index)
+        print("called it")
+        print(index)
 
     def startProgram(self, program, file="untitled"):
         print("Starting " + program["name"])
@@ -97,23 +103,26 @@ class MainWindow(QtWidgets.QMainWindow):
             program = self.pipelion.programs[key]
             programButtons.append(ProgramButton(self.pipelion, program))
         programBar = ProgramBar(self.pipelion, self, programButtons)
-        dockable = QtWidgets.QDockWidget("Programs", self)
+        dockable = QtWidgets.QDockWidget("", self)
         container = QtWidgets.QWidget()
+        container.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Maximum))
         layout = QtWidgets.QHBoxLayout()
+
         for programButton in programButtons:
             layout.addWidget(programButton)
         container.setLayout(layout)
         dockable.setWidget(container)
         dockable.setFeatures(QtWidgets.QDockWidget.NoDockWidgetFeatures)
+        dockable.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Maximum))
+        dockable.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.addDockWidget(QtCore.Qt.TopDockWidgetArea, dockable)
 
     def createCheckedOutPane(self):
-        items = QtWidgets.QDockWidget("Checked Out", self)
-        listWidget = QtWidgets.QListWidget()
-        listWidget.addItem("item1")
-        items.setWidget(listWidget)
-        items.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, items)
+        pane = QtWidgets.QDockWidget("Checked Out", self)
+        container = TableContainer(DefaultData().data, DefaultData().headers)
+        pane.setWidget(container)
+        pane.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, pane)
 
     def createMainPane(self):
         items = QtWidgets.QDockWidget("Main", self)

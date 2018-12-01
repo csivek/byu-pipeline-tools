@@ -22,7 +22,7 @@
 			"id":"hou",
 			"name":"Houdini",
 			"extension":"hip|hipnc",
-			"icon":"icons/houdini.png"
+			"icon":"icons/hou.png"
 		},
 		{
 			"id":"mari",
