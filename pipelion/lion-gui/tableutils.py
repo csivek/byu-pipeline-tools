@@ -167,3 +167,55 @@ class DefaultData():
         ('WATER', 100.0, 0.0, 1.0),
         ('XYLENES', 139.1, -47.8, 0.86)
         ]
+
+class DefaultUserData():
+    def __init__(self):
+        self.headers = self.headers()
+        self.data = self.data()
+    def headers(self):
+        # the solvent data ...
+        return ['My Checked out Items', 'Checked out by', 'Open', 'Sync', '', 'Delete']
+    def data(self):
+        return [
+        ('house/interior/hallway', ['htinney', 'csivek'], '', True, 1494408, ''),
+        ('house/interior/hallway', ['htinney'], '', True, 232408, ''),
+        ('global/leaves/leaf002', ['htinney'], '', False, 42, ''),
+        ('shots/c/004', ['htinney', 'kgraham','bdemann','csivek'], '', False, 12500408, '')
+        ]
+
+class DefaultDeptData(department):
+    def __init__(self):
+        self.headers = self.headers()
+        self.data = self.data()
+    def headers(self):
+        # the solvent data ...
+        return ['Asset Name', 'Assigned Artist', 'View', 'Action']
+    def data(self):
+        if (department == "model"):
+            return [
+            ('office/interior/chair', 'htinney', True, 'OPEN'),
+            ('office/interior/computer', 'csivek', True, 'CHECK_OUT'),
+            ('house/interior/pictureframes', 'kgraham', False, 'CREATE'),
+            ]
+        elif (department == "rig"):
+            return [
+            ('delilah', 'csivek', True, 'CHECK_OUT'),
+            ('death/pen', 'bdemann', True, 'CHECK_OUT'),
+            ]
+        elif (department == "concept"):
+            return [
+            ('house/interior', 'kendrag', True, 'CHECK_OUT'),
+            ('house/interior/hallway', 'bdemann', False, 'CREATE'),
+            ('global/leaves', 'kendrag', True, 'CHECK_OUT'),
+            ]
+        elif (department == "material"):
+            return [
+            ('house/interior/hallway/floor', 'htinney', False, 'CREATE'),
+            ('office/interior/chair', 'csivek', True, 'CHECK_OUT'),
+            ]
+        elif (department == "groom"):
+            return [
+            ('delilah/hair', 'htinney', True, 'OPEN'),
+            ]
+        else:
+            return []
