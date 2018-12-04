@@ -120,18 +120,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def createCheckedOutPane(self):
         pane = QtWidgets.QDockWidget("Checked Out", self)
-        container = TableContainer(DefaultData().data, DefaultData().headers)
+        container = TableContainer(DefaultUserData().data, DefaultUserData().headers)
         pane.setWidget(container)
         pane.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, pane)
 
     def createMainPane(self):
-        items = QtWidgets.QDockWidget("Main", self)
-        listWidget = QtWidgets.QListWidget()
-        listWidget.addItem("item1")
-        items.setWidget(listWidget)
-        items.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, items)
+        pane = QtWidgets.QDockWidget("Departments", self)
+        container = TableDeptContainer(DefaultDeptData("model").data, DefaultDeptData("model").headers)
+        pane.setWidget(container)
+        pane.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, pane)
 
     def createPreviewPane(self):
         items = QtWidgets.QDockWidget("Preview", self)

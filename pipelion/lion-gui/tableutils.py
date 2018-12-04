@@ -63,13 +63,47 @@ class TableContainer(QtWidgets.QWidget):
         # set column width to fit contents (set font first!)
         table.setRowCount(len(data_list))
         table.setColumnCount(len(header))
+        table.verticalHeader().setVisible(False)
         table.setHorizontalHeaderLabels(header)
         for row in range(len(data_list)):
-            for elem in range(len(data_list[row])):
-                if (elem == 3):
-                    table.setCellWidget(row,elem,QtWidgets.QPushButton(str(data_list[row][elem])))
-                else:
-                    table.setItem(row,elem,QtWidgets.QTableWidgetItem(str(data_list[row][elem])))
+            table.setItem(row,0,QtWidgets.QTableWidgetItem(str(data_list[row][0])))
+            table.setItem(row,1,QtWidgets.QTableWidgetItem(",".join(data_list[row][1])))
+            table.setCellWidget(row,2,QtWidgets.QPushButton("Open"))
+            if data_list[row][3]:
+                table.setCellWidget(row,3,QtWidgets.QPushButton("Sync Now"))
+            else:
+                table.setItem(row,3,QtWidgets.QTableWidgetItem("Up to date"))
+            table.setItem(row,4,QtWidgets.QTableWidgetItem(str(data_list[row][4]) + " kb"))
+            table.setCellWidget(row,5,QtWidgets.QPushButton("Delete"))
+        table.resizeColumnsToContents()
+        # enable sorting
+        table.setSortingEnabled(True)
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.addWidget(table)
+        self.setLayout(layout)
+
+class TableDeptContainer(QtWidgets.QWidget):
+    def __init__(self, data_list, header, *args):
+        QtWidgets.QWidget.__init__(self, *args)
+        # setGeometry(x_pos, y_pos, width, height)
+        #self.setGeometry(300, 200, 570, 450)
+        self.setWindowTitle("Click on column title to sort")
+        table = QtWidgets.QTableWidget()
+        # set font
+        font = QtGui.QFont("Courier New", 10)
+        table.setFont(font)
+        # set column width to fit contents (set font first!)
+        table.setRowCount(len(data_list))
+        table.setColumnCount(len(header))
+        table.verticalHeader().setVisible(False)
+        table.setHorizontalHeaderLabels(header)
+        for row in range(len(data_list)):
+            table.setItem(row,0,QtWidgets.QTableWidgetItem(str(data_list[row][0])))
+            table.setItem(row,1,QtWidgets.QTableWidgetItem(str(data_list[row][1])))
+            button = QtWidgets.QPushButton("View")
+            button.setEnabled(data_list[row][2])
+            table.setCellWidget(row,2,button)
+            table.setCellWidget(row,3,QtWidgets.QPushButton(str(data_list[row][3])))
         table.resizeColumnsToContents()
         # enable sorting
         table.setSortingEnabled(True)
@@ -191,9 +225,9 @@ class DefaultUserData():
         ]
 
 class DefaultDeptData():
-    def __init__(self):
+    def __init__(self, department):
         self.headers = self.headers()
-        self.data = self.data()
+        self.data = self.data(department)
     def headers(self):
         # the solvent data ...
         return ['Asset Name', 'Assigned Artist', 'View', 'Action']
