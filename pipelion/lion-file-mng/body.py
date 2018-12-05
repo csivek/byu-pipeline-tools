@@ -18,6 +18,7 @@ class Body:
 	def addElement(self, dept):
 		self._elements.append(Element(dept))
 		# TODO: createElementDirectory(dept)
+		# create_asset() takes the body object and writes it to the right place
 	def removeElement(self, dept):
 		# TODO: deleteElementDirectory(dept)
 		pass
