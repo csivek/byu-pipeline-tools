@@ -30,8 +30,8 @@ def getBody(path = "root"):
 	"""
 	Returns the specified body
 	"""
-	body1 = Body(path, ["model", "material"], user)
-	body2 = Body("house/interior", ["model"], "htinney")
+	body1 = Body(ASSET, path, ["model", "material"], user)
+	body2 = Body(ASSET, "house/interior", ["model"], "htinney")
 	if path == "root":
 		return body2
 	return body1

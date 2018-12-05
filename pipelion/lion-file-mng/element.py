@@ -3,7 +3,7 @@ class Element:
 	def __init__(self, dept):
 		self.dept = dept
 		self.user = None
-		self.steps = {"created":0,}
+		self.steps = {"created":0,} #steps come from config.lion
 	def assignUser(self, user):
 		self.user = user
 	def getUser(self):

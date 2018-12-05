@@ -1,0 +1,22 @@
+{
+  "type": "asset",
+  "path": "house_interior_hallway_vacuum",
+  "elements": [
+    {
+      "dept": "model",
+      "user": "hunter",
+      "steps": {
+        "created": true
+      }
+    }
+  ],
+  "history": [
+    {
+      "dept": "model",
+      "type": "checkout",
+      "time": "1355563265.81",
+      "user": "hunter",
+      "message": "so yeah, I just put some fur on grendels character, does it look okay?"
+    }
+  ]
+}

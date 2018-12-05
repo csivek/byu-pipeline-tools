@@ -48,84 +48,87 @@
 			"id":"concept",
 			"name":"Concept Art",
 			"programs":"file",
-			"type":"asset"
+			"type":"asset",
+			"steps": [
+			  "created"
+			]
 		},
 		{
 			"id":"model",
 			"name":"Modeling",
-			"programs": "maya hou",
+			"programs": [ "maya", "hou" ],
 			"type":"asset"
 		},
 		{
 			"id":"rig",
 			"name":"Rigging",
-			"programs": "maya",
+			"programs": ["maya"],
 			"type":"asset"
 		},
 		{
 			"id":"material",
 			"name":"Materials",
-			"programs": "maya hou",
+			"programs": [ "maya", "hou" ],
 			"type":"asset"
 		},
 		{
 			"id":"groom",
 			"name":"Grooming",
-			"programs": "maya hou",
+			"programs": [ "maya", "hou" ],
 			"type":"asset"
 		},
 		{
 			"id":"cloth",
 			"name":"Cloth",
-			"programs": "maya hou",
+			"programs": [ "maya", "hou" ],
 			"type":"asset"
 		},
 		{
 			"id":"tool",
 			"name":"Tools",
-			"programs": "hou",
+			"programs": ["hou"],
 			"type":"asset"
 		},
 		{
 			"id":"story",
 			"name":"Storyboards",
-			"programs":"file",
+			"programs":["file"],
 			"type":"shot"
 		},
 		{
 			"id":"layout",
 			"name":"Layout",
-			"programs":"maya",
+			"programs":["maya"],
 			"type":"shot"
 		},
 		{
 			"id":"anim",
 			"name":"Animation",
-			"programs":"maya",
+			"programs":["maya"],
 			"type":"shot"
 		},
 		{
 			"id":"light",
 			"name":"Lighting",
-			"programs":"maya hou",
+			"programs": [ "maya", "hou" ],
 			"type":"shot"
 		},
 		{
 			"id":"sim",
 			"name":"Simulation",
-			"programs":"maya hou",
+			"programs": [ "maya", "hou" ],
 			"type":"shot"
 		},
 		{
 			"id":"fx",
 			"name":"VFX",
-			"programs":"hou",
+			"programs":["hou"],
 			"type":"shot"
 		},
 		{
 			"id":"comp",
 			"name":"Compositing",
-			"programs":"nuke",
+			"programs":["nuke"],
 			"type":"shot"
 		}
 	]

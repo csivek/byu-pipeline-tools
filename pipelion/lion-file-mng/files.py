@@ -45,5 +45,5 @@ def create_asset(asset_body):
     json.dump(asset_body, body_output, indent=4)
     body_output.close()
 
-
-asset_body =
+def get_programs_list():
+    return [ "thing1", "thing2" ]
