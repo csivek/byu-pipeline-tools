@@ -10,6 +10,7 @@ except ImportError:
     from PySide2.QtCore import Slot
 
 from app import *
+from resources import *
 
 app = PipelionApp()
 
@@ -28,6 +29,7 @@ mainLayout.addLayout(screenLayout)
 mainWidget.setLayout(mainLayout)
 mainWindow.setCentralWidget(mainWidget)
 mainWindow.initialSize(0.7)
+mainWindow.setWindowTitle(PipelionResources().appName() + " - " + PipelionResources().showTitle())
 mainWindow.show()
 
 app.exec_()
