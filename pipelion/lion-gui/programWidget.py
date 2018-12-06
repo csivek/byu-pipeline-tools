@@ -45,15 +45,15 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 		opt = QtWidgets.QStyleOption()
 		opt.initFrom(self)
 		imageLength = self.size - self.border_size*2
-		if self.selected:
+		if self.selected and not self.shortcut:
 			self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, opt, painter, self)
 		painter.drawPixmap(QtCore.QRect(self.border_size, self.border_size, imageLength, imageLength), self.pixmap)
 		if self.selected:
-			painter.setBrush(QtGui.QBrush(QtGui.QColor.fromRgb(0,0,0,100)))
+			painter.setBrush(QtGui.QBrush(QtGui.QColor.fromRgb(0,255,0,100)))
 			painter.setPen(QtGui.QColor.fromRgb(0,0,0,0))
 			painter.drawEllipse(QtCore.QPoint(int(self.size/2),int(self.size/2)), imageLength/2+1, imageLength/2+1)
 		if self.underMouse():
-			painter.setBrush(QtGui.QBrush(QtGui.QColor.fromRgb(0,255,0,100)))
+			painter.setBrush(QtGui.QBrush(QtGui.QColor.fromRgb(0,0,0,100)))
 			painter.setPen(QtGui.QColor.fromRgb(0,0,0,0))
 			painter.drawEllipse(QtCore.QPoint(int(self.size/2),int(self.size/2)), imageLength/2+1, imageLength/2+1)
 		if self.warning:
@@ -87,7 +87,7 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 		if self.doubleClick:
 			double = self.checkDoubleClick()
 		if self.singleClick and not double:
-			self.singleClick()
+			self.singleClick[0](self.singleClick[1])
 		self.setSelected(True)
 
 	def checkDoubleClick(self):
@@ -127,8 +127,31 @@ class ProgramWidget(QtWidgets.QWidget):
 	def sizeHint(self):
 		return QtCore.QSize(self.size, self.size)
 
-def singleClickT():
-	print("SINGLE CLICK")
+
+
+class ProgramShelfWidget(QtWidgets.QWidget):
+	def __init__(self, programs, iconSize, textSize):
+		QtWidgets.QWidget.__init__(self)
+		self.programs = []
+		self.layout = QtWidgets.QHBoxLayout()
+		self.iconSize = iconSize
+		self.textSize = textSize
+		for i in range(len(programs)):
+			self.programs.append(ProgramWidget(programs[i], iconSize, programs[i].name, textSize, singleClick=(self.setSelected,i), doubleClick=doubleClickT, warning=False, shortcut=(i%2==0)))
+			self.layout.addWidget(self.programs[i])
+		self.setLayout(self.layout)
+
+	def updateProgramViews(self):
+		for i in range(len(self.programs)):
+			self.programs[i].setSelected(self.selectedProgram == i)
+
+	def setSelected(self, index):
+		self.selectedProgram = index
+		self.updateProgramViews()
+
+
+def singleClickT(name):
+	print("SINGLE CLICK: " + name)
 
 def doubleClickT():
 	print("DOUBLE CLICK")
@@ -136,8 +159,8 @@ def doubleClickT():
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	program = production_reader.getPrograms()[randint(0,5)]
-	widget = ProgramWidget(program, 50, program.name, 10, singleClick=singleClickT, doubleClick=doubleClickT, warning=True, shortcut=True)
+	programs = production_reader.getPrograms()
+	widget = ProgramShelfWidget(programs, 100, 14)
 	widget.show()
 
 	sys.exit(app.exec_())
