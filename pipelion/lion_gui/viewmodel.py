@@ -1,5 +1,5 @@
 from tables import *
-import pipelion.lion_file_mng_dummy.production_reader as pr
+import pipelion.lion_file_mng.production_reader as pr
 from resources import *
 from dialogs import *
 
@@ -19,15 +19,15 @@ class ViewModel():
         for body in self.userBodies:
             controller = CheckoutEntryController(self.parentWidget, body)
             row = []
-            row.append(TableData.labelEntry(body._path))
+            row.append(TableData.labelEntry(body.path))
             row.append(TableData.buttonEntry(Strings.open, Styles().openButton, controller.showOpenBodyDialog))
-            newHistories = pr.getNewHistories(body._path)
+            newHistories = pr.getNewHistories(body.path)
             if len(newHistories) > 0:
                 row.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, controller.showSyncBodyDialog))
             else:
                 row.append(TableData.labelEntry(Strings.nochanges))
             row.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, controller.showDeleteBodyDialog))
-            tableData[body._path] = row
+            tableData[body.path] = row
 
         headers = []
         headers.append(TableData.labelHeader(Strings.items))
@@ -40,11 +40,11 @@ class ViewModel():
         tableData = {}
         for body in self.allBodies:
             row = []
-            row.append(self.labelEntry(body._path))
+            row.append(self.labelEntry(body.path))
             departmentsLabel = ""
-            for element in body._elements:
+            for element in body.elements:
                 departmentsLabel += element.dept + " "
-            row.append(self.buttonEntry(Strings.rename, Styles.renameButton, lambda: Dialogs().showRenameBodyDialog(body._path)))
+            row.append(self.buttonEntry(Strings.rename, Styles.renameButton, lambda: Dialogs().showRenameBodyDialog(body.path)))
 
     def departmentTable(self):
         tableData = {}

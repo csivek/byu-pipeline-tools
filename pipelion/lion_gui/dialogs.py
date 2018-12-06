@@ -17,17 +17,17 @@ class CheckoutEntryController():
     #@Slot()
     def showOpenBodyDialog(self):
         print("started from the bottom now we here")
-        openDialog = CheckoutOpenDialog(self.body._path)
+        openDialog = CheckoutOpenDialog(self.body.path)
         openDialog.exec_()
 
     #@Slot()
     def showSyncBodyDialog(self):
-        syncDialog = CheckoutSyncDialog(self.body._path)
+        syncDialog = CheckoutSyncDialog(self.body.path)
         syncDialog.exec_()
 
     #@Slot()
     def showDeleteBodyDialog(self):
-        syncDialog = CheckoutSyncDialog(self.body._path)
+        syncDialog = CheckoutSyncDialog(self.body.path)
         syncDialog.exec_()
 
 class CheckoutOpenDialog(QtWidgets.QMessageBox):

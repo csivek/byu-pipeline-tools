@@ -5,6 +5,7 @@ import time
 
 
 class Body:
+
 	def __init__(self, type, path, depts, user):
 		'''
 		creates a Body instance describing the asset or shot stored in the given filepath

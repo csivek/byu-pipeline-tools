@@ -1,5 +1,4 @@
 
-
 class Program:
 	def __init__(self, id, name, extension, icon, launchScript):
 		self.id = id

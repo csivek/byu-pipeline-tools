@@ -2,6 +2,14 @@ import sys
 import os
 
 class PipelionResources():
+    @staticmethod
+    def pipelionDirectory():
+        try:
+            pipelionLoc = os.environ["BYU_TOOLS_DIR"] + "/pipelion"
+            return pipelionLoc
+        except:
+            return ""
+
     def appName(self):
         return "Pipelion"
 
@@ -9,7 +17,7 @@ class PipelionResources():
         return "Death and Delilah"
 
     def logo(self):
-        return "../images/PipelionLogoRevised.png"
+        return  PipelionResources.pipelionDirectory() + "/images/PipelionLogoRevised.png"
 
     def logoSize(self):
         return 85

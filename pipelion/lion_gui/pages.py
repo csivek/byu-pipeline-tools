@@ -12,8 +12,8 @@ except ImportError:
 from resources import *
 from tables import *
 from viewmodel import *
-from programWidget import ProgramWidget, ProgramShelfWidget
-from pipelion.lion_file_mng_dummy import production_reader
+from programWidget import ProgramShelfWidget
+from pipelion.lion_file_mng import production_reader
 
 class PageWidget(QtWidgets.QScrollArea):
     def __init__(self, pageLabel, isNestedPage=False):
