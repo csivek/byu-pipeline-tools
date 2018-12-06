@@ -10,13 +10,14 @@ from pipelion.lion_file_mng_dummy.program import Program
 from pipelion.lion_file_mng_dummy import production_reader
 
 class ProgramImageButton(QtWidgets.QAbstractButton):
-	def __init__(self, program, size, singleClick, doubleClick, selected, warning, parent):
+	def __init__(self, program, size, singleClick, doubleClick, selected, warning, shortcut, parent):
 		super(ProgramImageButton, self).__init__(parent)
 
 		pipelionLoc = os.environ["BYU_TOOLS_DIR"] + "/pipelion"
 		self.program = program
 		self.pixmap = QtGui.QPixmap(pipelionLoc + "/" + self.program.icon)
 		self.warningImage = QtGui.QPixmap(pipelionLoc + "/icons/warning-icon.png")
+		self.shortcutImage = QtGui.QPixmap(pipelionLoc + "/icons/shortcut-icon.png")
 
 		self.singleClick = singleClick
 		self.doubleClick = doubleClick
@@ -25,6 +26,7 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 
 		self.selected = selected
 		self.warning = warning
+		self.shortcut = shortcut
 		self.size = size
 		self.border_size = 4
 		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -46,12 +48,19 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 		if self.selected:
 			self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, opt, painter, self)
 		painter.drawPixmap(QtCore.QRect(self.border_size, self.border_size, imageLength, imageLength), self.pixmap)
+		if self.selected:
+			painter.setBrush(QtGui.QBrush(QtGui.QColor.fromRgb(0,0,0,100)))
+			painter.setPen(QtGui.QColor.fromRgb(0,0,0,0))
+			painter.drawEllipse(QtCore.QPoint(int(self.size/2),int(self.size/2)), imageLength/2+1, imageLength/2+1)
 		if self.underMouse():
 			painter.setBrush(QtGui.QBrush(QtGui.QColor.fromRgb(0,255,0,100)))
 			painter.setPen(QtGui.QColor.fromRgb(0,0,0,0))
-			painter.drawEllipse(QtCore.QPoint(int(self.size/2),int(self.size/2)), imageLength/2, imageLength/2)
+			painter.drawEllipse(QtCore.QPoint(int(self.size/2),int(self.size/2)), imageLength/2+1, imageLength/2+1)
 		if self.warning:
 			painter.drawPixmap(QtCore.QRect(0, 0, imageLength*0.4, imageLength*0.4), self.warningImage)
+		if self.shortcut:
+			shortcutSize = imageLength*0.3
+			painter.drawPixmap(QtCore.QRect(self.size - shortcutSize, self.size - shortcutSize, shortcutSize, shortcutSize), self.shortcutImage)
 
 	def enterEvent(self, event):
 		self.update()
@@ -79,7 +88,7 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 			double = self.checkDoubleClick()
 		if self.singleClick and not double:
 			self.singleClick()
-		self.toggleSelected()
+		self.setSelected(True)
 
 	def checkDoubleClick(self):
 		if (time.time() - self.lastClick) < 0.25:
@@ -91,9 +100,9 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 
 
 class ProgramWidget(QtWidgets.QWidget):
-	def __init__(self, program, size, text, fontSize, singleClick=None, doubleClick=None, selected=False, warning=False, parent=None):
+	def __init__(self, program, size, text, fontSize, singleClick=None, doubleClick=None, selected=False, warning=False, shortcut=False, parent=None):
 		QtWidgets.QWidget.__init__(self)
-		self.projectButton = ProgramImageButton(program, size, singleClick, doubleClick, selected, warning, parent)
+		self.projectButton = ProgramImageButton(program, size, singleClick, doubleClick, selected, warning, shortcut, parent)
 		self.text = QtWidgets.QLabel(text)
 		self.text.setFont(QtGui.QFont("Arial",10,QtGui.QFont.Bold))
 		self.text.setAlignment(QtCore.Qt.AlignCenter)
@@ -123,7 +132,7 @@ if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
 	program = production_reader.getPrograms()[randint(0,5)]
-	widget = ProgramWidget(program, 50, program.name, 18, singleClick=singleClickT, doubleClick=doubleClickT, warning=True)
+	widget = ProgramWidget(program, 50, program.name, 18, singleClick=singleClickT, doubleClick=doubleClickT, warning=True, shortcut=True)
 	widget.show()
 
 	sys.exit(app.exec_())
