@@ -104,13 +104,16 @@ class ProgramWidget(QtWidgets.QWidget):
 		QtWidgets.QWidget.__init__(self)
 		self.projectButton = ProgramImageButton(program, size, singleClick, doubleClick, selected, warning, shortcut, parent)
 		self.text = QtWidgets.QLabel(text)
-		self.text.setFont(QtGui.QFont("Arial",10,QtGui.QFont.Bold))
+		self.text.setFont(QtGui.QFont("Arial",fontSize,QtGui.QFont.Bold))
 		self.text.setAlignment(QtCore.Qt.AlignCenter)
 		self.layout = QtWidgets.QVBoxLayout()
 		self.layout.addWidget(self.projectButton)
+		self.size = size
 		if text:
 			self.layout.addWidget(self.text)
 		self.setLayout(self.layout)
+		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+		self.setSizePolicy(sizePolicy)
 
 	def setSelected(self, selected):
 		self.projectButton.setSelected(selected)
@@ -121,6 +124,8 @@ class ProgramWidget(QtWidgets.QWidget):
 	def toggleSelected(self):
 		self.projectButton.toggleSelected()
 
+	def sizeHint(self):
+		return QtCore.QSize(self.size, self.size)
 
 def singleClickT():
 	print("SINGLE CLICK")
@@ -132,7 +137,7 @@ if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
 	program = production_reader.getPrograms()[randint(0,5)]
-	widget = ProgramWidget(program, 50, program.name, 18, singleClick=singleClickT, doubleClick=doubleClickT, warning=True, shortcut=True)
+	widget = ProgramWidget(program, 50, program.name, 10, singleClick=singleClickT, doubleClick=doubleClickT, warning=True, shortcut=True)
 	widget.show()
 
 	sys.exit(app.exec_())
