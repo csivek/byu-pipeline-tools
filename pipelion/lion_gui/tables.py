@@ -9,9 +9,51 @@ except ImportError:
     from PySide2 import QtWidgets, QtGui, QtCore
     from PySide2.QtCore import Slot
 
-class TableItemType():
-    Label = 0
-    Button = 1
+class TableData():
+    # Data members that act as keys in a dictionary
+    WidgetType = "widget_type"
+    Label = "label"
+    Style = "style"
+    Action = "action"
+
+    # Data members for labels
+    ResizeMode = "resize_policy"
+
+    class WidgetTypes():
+        Label = 0
+        Button = 1
+
+    @staticmethod
+    def labelEntry(label):
+        entry = {}
+        entry[TableData.WidgetType] = TableData.WidgetTypes.Label
+        entry[TableData.Label] = label
+        return entry
+
+    @staticmethod
+    def labelHeader(label, resizeMode=QtWidgets.QHeaderView.Stretch):
+        header = {}
+        header[TableData.Label] = label
+        header[TableData.ResizeMode] = resizeMode
+        return header
+
+    @staticmethod
+    def buttonEntry(label, style, action=None):
+        entry = {}
+        entry[TableData.WidgetType] = TableData.WidgetTypes.Button
+        entry[TableData.Label] = label
+        entry[TableData.Style] = style
+        if action is not None:
+            entry[TableData.Action] = action
+        return entry
+
+    @staticmethod
+    def buttonHeader(label, resizeMode=QtWidgets.QHeaderView.Fixed):
+        header = {}
+        header[TableData.Label] = label
+        header[TableData.ResizeMode] = resizeMode
+        return header
+
 
 class TableEntry():
     def __init__(self, data):
@@ -19,15 +61,15 @@ class TableEntry():
         self.createWidget(self.data)
 
     def createWidget(self, data):
-        if data["type"] == TableItemType().Label:
+        if data[TableData.WidgetType] == TableData.WidgetTypes.Label:
             self.widget = TableLabel(data)
-        elif self.data["type"] == TableItemType().Button:
+        elif self.data[TableData.WidgetType] == TableData.WidgetTypes.Button:
             self.widget = TableButton(data)
         else:
-            self.widget = TableLabel({"label":"BROKEN_DATA"})
+            self.widget = TableLabel({TableData.Label:Strings.broken_data})
 
     def updateData(self, data):
-        if data["type"] != self.data["type"]:
+        if data[TableData.WidgetType] != self.data[TableData.WidgetType]:
             self.createWidget(data)
         self.data = data
         self.widget.setData(data)
@@ -36,10 +78,13 @@ class TableEntry():
 class TableLabel(QtWidgets.QLabel):
     def __init__(self, data):
         super(TableLabel, self).__init__("")
+        self.setStyleSheet('''
+            padding: 10; margin:20
+        ''')
         self.setData(data)
 
     def setData(self, data):
-        self.setText(data["label"])
+        self.setText(data[TableData.Label])
 
 class TableButton(QtWidgets.QPushButton):
     def __init__(self, data):
@@ -47,9 +92,9 @@ class TableButton(QtWidgets.QPushButton):
         self.setData(data)
 
     def setData(self, data):
-        self.setText(data["label"])
-        if "action" in data:
-            self.clicked.connect(data["action"])
+        self.setText(data[TableData.Label])
+        if TableData.Action in data:
+            self.clicked.connect(data[TableData.Action])
 
 class TableModel():
     def __init__(self, entryData, headers):
@@ -93,7 +138,14 @@ class Table(QtWidgets.QTableWidget):
         self.setRowCount(self.model.rowCount())
         self.setColumnCount(self.model.columnCount())
         self.verticalHeader().setVisible(False)
-        self.setHorizontalHeaderLabels(self.model.headers)
+
+        print self.model.headers
+        headerLabels = [ x[TableData.Label] for x in self.model.headers]
+        self.setHorizontalHeaderLabels(headerLabels)
+
+        horizontalHeader = self.horizontalHeader()
+        for i in range(len(self.model.headers)):
+            horizontalHeader.setSectionResizeMode(i, self.model.headers[i][TableData.ResizeMode])
 
         for y in range(self.model.rowCount()):
             for x in range(self.model.columnCount()):

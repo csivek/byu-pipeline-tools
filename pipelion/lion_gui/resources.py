@@ -75,6 +75,7 @@ class Strings():
     rename = "Rename"
     change_dot_dot_dot = "Change..."
     items = "Items"
+    broken_data = "Broken Data"
 
 class Styles():
     openButton = '''

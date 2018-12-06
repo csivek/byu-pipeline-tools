@@ -130,14 +130,14 @@ class ProgramWidget(QtWidgets.QWidget):
 
 
 class ProgramShelfWidget(QtWidgets.QWidget):
-	def __init__(self, programs, iconSize, textSize):
+	def __init__(self, programs, iconSize, textSize, shortcuts=False):
 		QtWidgets.QWidget.__init__(self)
 		self.programs = []
 		self.layout = QtWidgets.QHBoxLayout()
 		self.iconSize = iconSize
 		self.textSize = textSize
 		for i in range(len(programs)):
-			self.programs.append(ProgramWidget(programs[i], iconSize, programs[i].name, textSize, singleClick=(self.setSelected,i), doubleClick=doubleClickT, warning=False, shortcut=(i%2==0)))
+			self.programs.append(ProgramWidget(programs[i], iconSize, programs[i].name, textSize, singleClick=(self.setSelected,i), doubleClick=doubleClickT, warning=False, shortcut=shortcuts))
 			self.layout.addWidget(self.programs[i])
 		self.setLayout(self.layout)
 

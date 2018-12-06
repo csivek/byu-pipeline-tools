@@ -19,21 +19,21 @@ class ViewModel():
         for body in self.userBodies:
             controller = CheckoutEntryController(self.parentWidget, body)
             row = []
-            row.append(self.labelEntry(body._path))
-            row.append(self.buttonEntry(Strings().open, Styles().openButton, controller.showOpenBodyDialog))
+            row.append(TableData.labelEntry(body._path))
+            row.append(TableData.buttonEntry(Strings.open, Styles().openButton, controller.showOpenBodyDialog))
             newHistories = pr.getNewHistories(body._path)
             if len(newHistories) > 0:
-                row.append(self.buttonEntry(Strings().sync, Styles().syncButton, controller.showSyncBodyDialog))
+                row.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, controller.showSyncBodyDialog))
             else:
-                row.append(self.labelEntry(Strings().nochanges))
-            row.append(self.buttonEntry(Strings().delete, Styles().deleteButton, controller.showDeleteBodyDialog))
+                row.append(TableData.labelEntry(Strings.nochanges))
+            row.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, controller.showDeleteBodyDialog))
             tableData[body._path] = row
 
         headers = []
-        headers.append(Strings().items)
-        headers.append(Strings().open)
-        headers.append(Strings().sync)
-        headers.append(Strings().delete)
+        headers.append(TableData.labelHeader(Strings.items))
+        headers.append(TableData.buttonHeader(Strings.open))
+        headers.append(TableData.buttonHeader(Strings.sync))
+        headers.append(TableData.buttonHeader(Strings.delete))
         return tableData, headers
 
     def bodyOverviewTable(self):
@@ -44,22 +44,7 @@ class ViewModel():
             departmentsLabel = ""
             for element in body._elements:
                 departmentsLabel += element.dept + " "
-            row.append(self.buttonEntry(Strings().rename, Styles().renameButton, lambda: Dialogs().showRenameBodyDialog(body._path)))
+            row.append(self.buttonEntry(Strings.rename, Styles.renameButton, lambda: Dialogs().showRenameBodyDialog(body._path)))
 
     def departmentTable(self):
         tableData = {}
-
-    def labelEntry(self, label):
-        entry = {}
-        entry["type"] = TableItemType().Label
-        entry["label"] = label
-        return entry
-
-    def buttonEntry(self, label, style, action=None):
-        entry = {}
-        entry["type"] = TableItemType().Button
-        entry["label"] = label
-        entry["style"] = style
-        if action is not None:
-            entry["action"] = action
-        return entry

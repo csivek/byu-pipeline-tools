@@ -12,7 +12,8 @@ except ImportError:
 from resources import *
 from tables import *
 from viewmodel import *
-from programWidget import ProgramWidget
+from programWidget import ProgramWidget, ProgramShelfWidget
+from pipelion.lion_file_mng_dummy import production_reader
 
 class PageWidget(QtWidgets.QScrollArea):
     def __init__(self, pageLabel, isNestedPage=False):
@@ -43,14 +44,16 @@ class PageWidget(QtWidgets.QScrollArea):
 
 class DashboardPage(PageWidget):
     def __init__(self):
-        super(DashboardPage, self).__init__(Strings().dashboard)
+        super(DashboardPage, self).__init__(Strings.dashboard)
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):
         pageLayout = QtWidgets.QVBoxLayout()
-        pageLayout.addWidget(self.headerWidget(Strings().shortcuts))
-        pageLayout.addWidget(QtWidgets.QLabel("Here will be shortcuts"))
-        pageLayout.addWidget(self.headerWidget(Strings().checkedoutitems))
+        pageLayout.addWidget(self.headerWidget(Strings.shortcuts))
+        programs = production_reader.getPrograms()
+    	self.programShelfWidget = ProgramShelfWidget(programs, 100, 14, shortcuts=True)
+        pageLayout.addWidget(self.programShelfWidget)
+        pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
         tableData, headers = ViewModel(self).checkedOutTable()
         table = Table(TableModel(tableData, headers))
         pageLayout.addWidget(table)
@@ -59,7 +62,7 @@ class DashboardPage(PageWidget):
 
 class SettingsPage(PageWidget):
     def __init__(self):
-        super(SettingsPage, self).__init__(Strings().settings)
+        super(SettingsPage, self).__init__(Strings.settings)
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):
@@ -69,7 +72,7 @@ class SettingsPage(PageWidget):
 
 class AdminToolsPage(PageWidget):
     def __init__(self):
-        super(AdminToolsPage, self).__init__(Strings().admin_tools)
+        super(AdminToolsPage, self).__init__(Strings.admin_tools)
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):
