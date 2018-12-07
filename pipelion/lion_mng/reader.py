@@ -6,6 +6,7 @@ from .program import Program
 from .production import Production
 from .department import Department
 import time
+import random
 
 def getBodiesByUser(user = "current"):
 	"""
@@ -59,7 +60,7 @@ def getNewHistories(path = "root", user = "current"):
 	"""
 	get all updates to an asset that
 	"""
-	if path == "root":
+	if random.randint(0,1) == 0:
 		return []
 	return [History("model","CHECKOUT", time.time(), "csivek", "csivek checked out asset " + path),History("body","PUBLISH", time.time(), "csivek", "csived created asset " + path)]
 
@@ -93,3 +94,10 @@ def getDepartments():
 
 def CurrentProduction():
 	return Production("Death and Delilah", getDepartments(), getPrograms(), [("asset","Assets"),("shot","Shots")])
+
+def checkSyncConflictBody(path, user):
+	"""
+	Compares SyncFile with histories on the body & last modified on each file within
+	each department and returns a list of conflicting files
+	"""
+	return ["path/to/file/model.mb","path/to/file/texture.tex"]

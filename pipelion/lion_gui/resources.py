@@ -45,7 +45,7 @@ class Strings():
     admin_tools = "Admin Tools"
     shortcuts = "Shortcuts"
     checkedoutitems = "Checked Out Items"
-    open = "Open"
+    open = "Open..."
     sync = "Sync"
     nochanges = "No Changes"
     delete = "Delete"

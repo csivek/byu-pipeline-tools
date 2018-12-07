@@ -6,6 +6,7 @@ from .logger import Logger
 def createBody(path, depts):
 	"""
 	creates a body for an asset or shot
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -13,6 +14,7 @@ def createBody(path, depts):
 def deleteBody(path):
 	"""
 	deletes a body for an asset or shot
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -20,6 +22,7 @@ def deleteBody(path):
 def renameBody(path, new_path):
 	"""
 	renames a body for an asset or shot
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -27,6 +30,7 @@ def renameBody(path, new_path):
 def addDepartment(dept):
 	"""
 	adds an element (department) to a body
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -34,6 +38,7 @@ def addDepartment(dept):
 def deleteDepartment(dept):
 	"""
 	deletes an element from a body
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -44,6 +49,7 @@ def insertStep(dept, step, index):
 	get current Production
 	find Department in Production
 	call Department.deleteStep()
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -54,6 +60,7 @@ def renameStep(dept, oldStep, newStep):
 	deleteStep()
 	addStep()
 	BUT PRESEVE THE STEP INFO BY ASSET
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -64,6 +71,7 @@ def deleteStep(dept, step):
 	get current Production
 	find Department in Production
 	call Department.deleteStep()
+	Kendra
 	"""
 	#Kendra TODO: Add Backend Calls to change steps in each element of bodies
 	Logger.logUpdate()
@@ -75,13 +83,7 @@ def moveStep(dept, step, index):
 	get current Production
 	find Department in Production
 	call Department.moveStep()
-	"""
-	Logger.logUpdate()
-	return "SUCCESS"
-
-def checkoutBody(path, dept, user = "current"):
-	"""
-	checkouts an asset
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -89,13 +91,36 @@ def checkoutBody(path, dept, user = "current"):
 def openBody(path, dept, user = "current"):
 	"""
 	opens a user's local working file
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
 
-def syncElement(path, dept, user = "current"):
+def cloneBody(path, dept, user = "current"):
+	"""
+	checkouts an asset, creates a SyncFile (a config file that gives the timestamp
+	of when each department was cloned)
+	Kendra
+	"""
+	Logger.logUpdate()
+	return "SUCCESS"
+
+def syncBody(path, depts, user = "current"):
 	"""
 	syncronizes the user's local body for the checked-out asset
+	Replaces all departments of a body in a user's working directory that are
+	passed in through "depts".
+	Call syncElement on all non-conflicting Elements of a cloned local Body
+
+	Creates a SyncFile (a config file that gives the timestamp of when the element was last synced)
+	"""
+	Logger.logUpdate()
+	return "SUCCESS"
+
+def syncElement(path, dept, isMerge=False):
+	"""
+	if isMerge is false, Copy the production version of the file and replace the local one
+	else Copy the production into a new file and flag the local Body for conflicts
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -103,6 +128,7 @@ def syncElement(path, dept, user = "current"):
 def publishElement(path, dept, user = "current"):
 	"""
 	publishes the user's asset to the pipeline
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
@@ -110,6 +136,7 @@ def publishElement(path, dept, user = "current"):
 def revertElement(path, dept, publishID, user = "current"):
 	"""
 	reverts the pipeline body to the specified previous publish
+	Kendra
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
