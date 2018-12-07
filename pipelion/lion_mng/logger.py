@@ -71,6 +71,7 @@ class Logger(QThread):
         with open(Logger.logpath(), "rb") as f:
             f.seek(-2, os.SEEK_END)
             while f.read(1) != b"\n":
+                #Hunter TODO: Make sure this doesn't break with a newline character at the beginning, and if the file doesn't exist
                 f.seek(-2, os.SEEK_CUR)
             last = f.readline()
             f.close()
