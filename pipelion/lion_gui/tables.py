@@ -98,8 +98,8 @@ class TableButton(QtWidgets.QPushButton):
 
 class TableModel():
     def __init__(self, entryData, headers):
-        print("\n\n\nTABLE MODEL\n\n\n")
-        print(entryData)
+        #print("\n\n\nTABLE MODEL\n\n\n")
+        #print(entryData)
         self.entries = []
         for row in entryData.keys():
             entry = []
@@ -139,7 +139,7 @@ class Table(QtWidgets.QTableWidget):
         self.setColumnCount(self.model.columnCount())
         self.verticalHeader().setVisible(False)
 
-        print self.model.headers
+        #print self.model.headers
         headerLabels = [ x[TableData.Label] for x in self.model.headers]
         self.setHorizontalHeaderLabels(headerLabels)
 
@@ -149,7 +149,7 @@ class Table(QtWidgets.QTableWidget):
 
         for y in range(self.model.rowCount()):
             for x in range(self.model.columnCount()):
-                print(self.model.entryAtIndex(y, x).data)
+                #print(self.model.entryAtIndex(y, x).data)
                 self.setCellWidget(y, x, self.model.widgetAtIndex(y, x))
 
         self.resizeColumnsToContents()

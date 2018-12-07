@@ -11,9 +11,9 @@ except ImportError:
 
 from resources import *
 from tables import *
-from viewmodel import *
+import viewmodel as ViewModel
 from programWidget import ProgramShelfWidget
-from pipelion.lion_file_mng import production_reader
+from pipelion.lion_mng import production_reader
 
 class PageWidget(QtWidgets.QScrollArea):
     def __init__(self, pageLabel, isNestedPage=False):
@@ -54,7 +54,7 @@ class DashboardPage(PageWidget):
     	self.programShelfWidget = ProgramShelfWidget(programs, 100, 14, shortcuts=True)
         pageLayout.addWidget(self.programShelfWidget)
         pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
-        tableData, headers = ViewModel(self).checkedOutTable()
+        tableData, headers = ViewModel.checkedOutTable()
         table = Table(TableModel(tableData, headers))
         pageLayout.addWidget(table)
         return pageLayout
@@ -83,7 +83,7 @@ class AdminToolsPage(PageWidget):
 class BodyOverviewPage(PageWidget):
     def __init__(self, bodyType):
         self.bodyType = bodyType
-        super(BodyOverviewPage, self).__init__(PipelionResources().BodyTypeNiceName(self.bodyType))
+        super(BodyOverviewPage, self).__init__(self.bodyType[1])
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):
@@ -94,7 +94,7 @@ class BodyOverviewPage(PageWidget):
 class DepartmentPage(PageWidget):
     def __init__(self, department):
         self.department = department
-        super(DepartmentPage, self).__init__(PipelionResources().DepartmentNiceName(self.department), isNestedPage=True)
+        super(DepartmentPage, self).__init__(self.department.name, isNestedPage=True)
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):

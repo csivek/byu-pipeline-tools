@@ -11,13 +11,15 @@ except ImportError:
 
 from app import *
 from resources import *
+from pipelion.lion_mng.logger import Logger
+from window import *
+from resources import *
+import viewmodel as ViewModel
 
 def main():
+
     app = PipelionApp()
-
-    from window import *
-    from resources import *
-
+    ViewModel.initialize()
     mainWindow = MainWindow()
     mainWidget = QtWidgets.QWidget()
     mainLayout = QtWidgets.QHBoxLayout()
@@ -37,3 +39,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#Hunter TODO: Include the PySide2 Libraries in the repo, or make a build script that grabs themself.
+#Hunter TODO: Clean up import statements across the application

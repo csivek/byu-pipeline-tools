@@ -1,73 +1,38 @@
 import sys
 import os
+import pipelion.lion_mng.reader as Reader
 
 class PipelionResources():
-    @staticmethod
-    def pipelionDirectory():
-        try:
-            pipelionLoc = os.environ["BYU_TOOLS_DIR"] + "/pipelion"
-            return pipelionLoc
-        except:
-            return ""
 
-    def appName(self):
+    @staticmethod
+    def appName():
         return "Pipelion"
 
-    def showTitle(self):
-        return "Death and Delilah"
+    @staticmethod
+    def showTitle():
+        return Reader.CurrentProduction().name
 
-    def logo(self):
-        return  PipelionResources.pipelionDirectory() + "/images/PipelionLogoRevised.png"
+    @staticmethod
+    def logo():
+        return Reader.CurrentProduction().logo
 
-    def logoSize(self):
+    @staticmethod
+    def logoSize():
         return 85
+        
+    @staticmethod
+    def bodyTypes():
+        return Reader.CurrentProduction().bodyTypes
 
-    def bodyTypes(self):
-        return ["asset", "shot"]
+    @staticmethod
+    def departments(type=("","")):
+        if type == ("",""):
+            return Reader.CurrentProduction().departments
+        else:
+            return [x for x in Reader.CurrentProduction().departments if x.type == type[0]]
 
-    def BodyTypeNiceName(self, bodyType):
-        if bodyType == "asset":
-            return "Assets"
-        return "Shots"
-
-    #TODO: Futureproof this so that it takes in the asset types
-    def departments(self, type=""):
-        if type=="asset":
-            return self.assetDepartments()
-        elif type=="shot":
-            return self.shotDepartments()
-
-    def DepartmentNiceName(self, department):
-        if department=="model":
-            return "Modeling"
-        elif department=="rig":
-            return "Rigging"
-        elif department=="materials":
-            return "Materials"
-        elif department=="groom":
-            return "Grooming"
-        elif department=="cloth":
-            return "Cloth"
-        elif department=="layout":
-            return "Layout"
-        elif department=="anim":
-            return "Animation"
-        elif department=="fx":
-            return "VFX"
-        elif department=="sim":
-            return "Simulation"
-        elif department=="lighting":
-            return "Lighting"
-        elif department=="comp":
-            return "Composition"
-
-    def assetDepartments(self):
-        return ["model", "rig", "materials", "groom", "cloth"]
-
-    def shotDepartments(self):
-        return ["layout", "anim", "fx", "sim", "lighting", "comp"]
-
-    def isAdmin(self):
+    @staticmethod
+    def isAdmin():
         return True
 
 class Strings():

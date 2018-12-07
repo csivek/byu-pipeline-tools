@@ -35,7 +35,7 @@ class ScreenLayout(QtWidgets.QStackedLayout):
         self.pages.append(DashboardPage())
         for bodyType in PipelionResources().bodyTypes():
             self.pages.append(BodyOverviewPage(bodyType))
-            for department in PipelionResources().departments(bodyType):
+            for department in PipelionResources.departments(bodyType):
                 self.pages.append(DepartmentPage(department))
         self.pages.append(SettingsPage())
         if(PipelionResources().isAdmin()):

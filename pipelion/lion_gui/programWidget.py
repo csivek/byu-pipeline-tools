@@ -6,7 +6,7 @@ import os
 import time
 from random import randint
 from PySide2 import QtCore, QtWidgets, QtGui
-from pipelion.lion_file_mng import production_reader
+from pipelion.lion_mng import production_reader
 
 class ProgramImageButton(QtWidgets.QAbstractButton):
 	def __init__(self, program, size, singleClick, doubleClick, selected, warning, shortcut, parent):

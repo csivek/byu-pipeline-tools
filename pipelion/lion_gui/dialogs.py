@@ -10,8 +10,7 @@ except ImportError:
     from PySide2.QtCore import Slot
 
 class CheckoutEntryController():
-    def __init__(self, parentWidget, body):
-        self.parentWidget = parentWidget
+    def __init__(self, body):
         self.body = body
 
     #@Slot()

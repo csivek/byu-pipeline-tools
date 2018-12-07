@@ -3,6 +3,8 @@ from .body import Body
 from .element import Element
 from .history import History
 from .program import Program
+from .production import Production
+from .department import Department
 import time
 
 def getBodiesByUser(user = "current"):
@@ -70,3 +72,24 @@ def getPrograms():
 	programs.append(Program("nuke", "Nuke", ["nk"], "icons/nuke.png", "app-launch-scripts/project_nuke.sh"))
 	programs.append(Program("file", "Extra Files", ["*"], "icons/file.png", "app-launch-scripts/project_file.sh"))
 	return programs
+
+def getDepartments():
+	depts = []
+	depts.append(Department("concept","asset","Concept",["file"],["Rough Draft", "Final"]))
+	depts.append(Department("model","asset","Model",["maya","hou"],["Rough Draft", "Final"]))
+	depts.append(Department("rig","asset","Rigging",["maya"],["Rough Draft", "Final"]))
+	depts.append(Department("tex","asset","Textures",["mari","file"],["Rough Draft", "Final"]))
+	depts.append(Department("material","asset","Materials",["hou"],["Rough Draft", "Final"]))
+	depts.append(Department("groom","asset","Grooming",["maya","hou"],["Rough Draft", "Final"]))
+	depts.append(Department("cloth","asset","Cloth",["maya","hou"],["Rough Draft", "Final"]))
+	depts.append(Department("layout","shot","Layout",["maya","hou"],["Rough Draft", "Final"]))
+	depts.append(Department("anim","shot","Animation",["maya"],["Rough Draft", "Final"]))
+	depts.append(Department("fx","shot","VFX",["hou"],["Rough Pass", "In Context", "Lit" ,"Final"]))
+	depts.append(Department("sim","shot","Simulation",["maya","hou"],["Rough Draft", "Final"]))
+	depts.append(Department("lighting","shot","Lighting",["maya","hou"],["Rough Draft", "Final"]))
+	depts.append(Department("render","shot","Render",["file"],["Previs", "Final"]))
+	depts.append(Department("comp","shot","Compositing",["nuke"],["Rough Draft", "Final"]))
+	return depts
+
+def CurrentProduction():
+	return Production("Death and Delilah", getDepartments(), getPrograms(), [("asset","Assets"),("shot","Shots")])
