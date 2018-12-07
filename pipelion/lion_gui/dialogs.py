@@ -9,6 +9,8 @@ except ImportError:
     from PySide2 import QtWidgets, QtGui, QtCore
     from PySide2.QtCore import Slot
 
+from pipelion.lion_mng.reader import *
+
 class CheckoutEntryController():
     def __init__(self, body):
         self.body = body
@@ -21,7 +23,15 @@ class CheckoutEntryController():
 
     #@Slot()
     def showSyncBodyDialog(self):
-        syncDialog = CheckoutSyncDialog(self.body.path)
+        user = os.environ["USER"]
+        conflicts = checkSyncConflictBody(self.body.path,user)
+        if len(conflicts) == 0:
+            syncDialog = QMessageBox()
+            syncDialog.setText("Asset (" + self.body.path + ") has been synced.")
+            syncDialog.exec_()
+            return
+
+        syncDialog = CheckoutSyncDialog(self.body, conflicts)
         syncDialog.exec_()
 
     #@Slot()
@@ -36,6 +46,7 @@ class CheckoutOpenDialog(QtWidgets.QMessageBox):
         self.dept = dept
 
 class CheckoutSyncDialog(QtWidgets.QMessageBox):
-    def __init__(self, path):
+    def __init__(self, body, conflicts):
         super(CheckoutSyncDialog, self).__init__()
-        self.path = path
+        self.body = body
+        self.conflicts = conflicts
