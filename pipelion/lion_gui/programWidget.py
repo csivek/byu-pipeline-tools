@@ -6,7 +6,7 @@ import os
 import time
 from random import randint
 from PySide2 import QtCore, QtWidgets, QtGui
-from pipelion.lion_mng import production_reader
+from resources import *
 
 class ProgramImageButton(QtWidgets.QAbstractButton):
 	def __init__(self, program, size, singleClick, doubleClick, selected, warning, shortcut, parent):
@@ -158,7 +158,7 @@ def doubleClickT():
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	programs = production_reader.getPrograms()
+	programs = PipelionResources.programs()
 	widget = ProgramShelfWidget(programs, 100, 14)
 	widget.show()
 

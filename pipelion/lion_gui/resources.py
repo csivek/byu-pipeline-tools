@@ -19,7 +19,7 @@ class PipelionResources():
     @staticmethod
     def logoSize():
         return 85
-        
+
     @staticmethod
     def bodyTypes():
         return Reader.CurrentProduction().bodyTypes
@@ -30,6 +30,10 @@ class PipelionResources():
             return Reader.CurrentProduction().departments
         else:
             return [x for x in Reader.CurrentProduction().departments if x.type == type[0]]
+
+    @staticmethod
+    def programs():
+        return Reader.CurrentProduction().programs
 
     @staticmethod
     def isAdmin():
