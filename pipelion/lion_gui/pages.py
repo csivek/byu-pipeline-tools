@@ -13,7 +13,6 @@ from resources import *
 from tables import *
 import viewmodel as ViewModel
 from programWidget import ProgramShelfWidget
-from pipelion.lion_mng import production_reader
 
 class PageWidget(QtWidgets.QScrollArea):
     def __init__(self, pageLabel, isNestedPage=False):
@@ -50,7 +49,7 @@ class DashboardPage(PageWidget):
     def layoutPage(self):
         pageLayout = QtWidgets.QVBoxLayout()
         pageLayout.addWidget(self.headerWidget(Strings.shortcuts))
-        programs = production_reader.getPrograms()
+        programs = PipelionResources.programs()
     	self.programShelfWidget = ProgramShelfWidget(programs, 100, 14, shortcuts=True)
         pageLayout.addWidget(self.programShelfWidget)
         pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
