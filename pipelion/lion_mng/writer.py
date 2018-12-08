@@ -2,21 +2,31 @@ import os
 import sys
 from .production import Directories
 from .logger import Logger
+from body import Body
+from .reader import *
+from .files import *
 
-def createBody(path, depts):
+def createBody(path, depts, type):
 	"""
-	creates a body for an asset or shot
-	Kendra
+	creates a body for an asset or shot, and all of its corresponding metadata and directories
 	"""
+	body = Body(type, path, depts)
+	body.writeSelfToFile()
 	Logger.logUpdate()
-	return "SUCCESS"
+	return body
 
-def deleteBody(path):
+def deleteBodyFromProduction(path):
 	"""
 	deletes a body for an asset or shot
 	Kendra
 	"""
+
 	Logger.logUpdate()
+	return "SUCCESS"
+
+#deletes the cloned body from a user's private folder (/groups/dand/users/....)
+def deleteBodyClone(path, user):
+
 	return "SUCCESS"
 
 def renameBody(path, new_path):

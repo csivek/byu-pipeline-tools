@@ -8,6 +8,16 @@ from .department import Department
 import time
 import random
 
+
+#TODO Kendra functions to read in config.json stuff
+
+
+def ProductionRoot():
+	#TODO Kendra actually get the real production_root
+	return "/users/guest/k/kendradg/Animation/Pipelion/production"
+
+
+
 def getBodiesByUser(user = "current"):
 	"""
 	gets all bodies associated with a user

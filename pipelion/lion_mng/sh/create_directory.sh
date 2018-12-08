@@ -1,13 +1,7 @@
 #!/bin/bash
 
-PRODUCTION_ROOT="$1"
-LOCATION="$2"
+DIRECTORY="$1"
 
-cd $PRODUCTION_ROOT
-
-if [ ! -d $LOCATION ]; then
-  mkdir -p $LOCATION
+if [ ! -d $DIRECTORY ]; then
+  mkdir -p $DIRECTORY
 fi
-cd $LOCATION
-
-pwd

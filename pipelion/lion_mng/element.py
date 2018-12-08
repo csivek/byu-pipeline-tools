@@ -1,4 +1,8 @@
 
+from .files import *
+
+
+
 class Element:
 	def __init__(self, dept):
 		self.dept = dept
@@ -14,7 +18,18 @@ class Element:
 		self.steps[name] = value
 	def getSteps(self):
 		return self.steps
-	def prettyPrint(self, level):
+	def toJson(self):
+		json = {}
+		json['dept'] = self.dept
+		json['user'] = self.user
+		json['steps'] = self.steps
+		return json
+	def writeSelfToFile(self, parentBody):
+		from .reader import ProductionRoot
+		element_home_dir = ProductionRoot() + "/" + parentBody.getFilePath() + "/" + self.dept
+		create_directory(element_home_dir)
+		write_file(element_home_dir, "/element.json", self.toJson())
+	def prettyPrint(self, level=1):
 		indent = "".join(["\t"]*level)
 		print(indent + "{")
 		print(indent + "\tDEPT: " + self.dept)

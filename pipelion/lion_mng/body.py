@@ -1,26 +1,26 @@
-
+import os
 from .element import Element
 from .history import History
+from .files import *
 import time
 
 
 class Body:
 
-	def __init__(self, type, path, depts, user):
+	def __init__(self, type, path, depts):
 		'''
 		creates a Body instance describing the asset or shot stored in the given filepath
 		'''
 		self.type = type
 		self.path = path
-		elems = []
+		self.elements = []
 		for dept in depts:
-			elems.append(Element(dept))
-		self.elements = elems
-		self.history = [History("body","CREATe", time.time(), user, "Created asset")]
+			self.addElement(dept)
+		self.history = [History("body","CREATE", time.time(), os.environ["USER"], "Created asset")]
 	def addElement(self, dept):
-		self.elements.append(Element(dept))
-		# TODO: createElementDirectory(dept)
-		# create_asset() takes the body object and writes it to the right place
+		elem = Element(dept)
+		self.elements.append(elem)
+		elem.writeSelfToFile(self)
 	def removeElement(self, dept):
 		# TODO: deleteElementDirectory(dept)
 		pass
@@ -29,7 +29,25 @@ class Body:
 			if elem.getDept() == dept:
 				return elem
 		return None
-	def prettyPrint(self, level):
+	def getFilePath(self):
+		return self.type[1].lower() + "/" + self.path.replace("/", "-")
+	def writeSelfToFile(self):
+		from .reader import ProductionRoot
+		body_home_dir = ProductionRoot() + "/" + self.getFilePath()
+		create_directory(body_home_dir)
+		write_file(body_home_dir, "/body.json", self.toJson())
+	def toJson(self):
+		json = {}
+		json['type'] = self.type[0]
+		json['path'] = self.path
+		json['elements'] = []
+		for elem in self.elements:
+			json['elements'].append(elem.toJson())
+		json['history'] = []
+		for hist in self.history:
+			json['history'].append(hist.toJson())
+		return json
+	def prettyPrint(self, level=1):
 		indent = "".join(["\t"]*level)
 		print(indent + "{")
 		print(indent + "\tPATH: " + self.path)
