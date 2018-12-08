@@ -6,7 +6,10 @@ import os
 import time
 from random import randint
 from PySide2 import QtCore, QtWidgets, QtGui
+from PySide2.QtCore import Signal
 from resources import *
+
+import traceback
 
 class ProgramImageButton(QtWidgets.QAbstractButton):
 	def __init__(self, program, size, singleClick, doubleClick, selected, warning, shortcut, parent):
@@ -99,8 +102,10 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 
 
 class ProgramWidget(QtWidgets.QWidget):
+	clickedOutside = Signal()
+
 	def __init__(self, program, size, text, fontSize, singleClick=None, doubleClick=None, selected=False, warning=False, shortcut=False, parent=None):
-		QtWidgets.QWidget.__init__(self)
+		super(ProgramWidget, self).__init__()
 		self.projectButton = ProgramImageButton(program, size, singleClick, doubleClick, selected, warning, shortcut, parent)
 		self.text = QtWidgets.QLabel(text)
 		self.text.setFont(QtGui.QFont("Arial",fontSize,QtGui.QFont.Bold))
@@ -113,9 +118,12 @@ class ProgramWidget(QtWidgets.QWidget):
 		self.setLayout(self.layout)
 		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
 		self.setSizePolicy(sizePolicy)
+		#self.setFocusPolicy(QtCore.Qt.ClickFocus)
 
 	def setSelected(self, selected):
 		self.projectButton.setSelected(selected)
+		if selected:
+			self.setFocus(QtCore.Qt.MouseFocusReason)
 
 	def getSelected(self):
 		return self.projectButton.getSelected()
@@ -126,27 +134,44 @@ class ProgramWidget(QtWidgets.QWidget):
 	def sizeHint(self):
 		return QtCore.QSize(self.size, self.size)
 
+	def focusOutEvent(self, event):
+		if(self.getSelected()):
+			self.setSelected(False)
+			self.clickedOutside.emit()
 
 
 class ProgramShelfWidget(QtWidgets.QWidget):
+	selectedSet = Signal(int)
+
 	def __init__(self, programs, iconSize, textSize, shortcuts=False):
-		QtWidgets.QWidget.__init__(self)
-		self.programs = []
+		super(ProgramShelfWidget, self).__init__()
+		self.programWidgets = []
 		self.layout = QtWidgets.QHBoxLayout()
 		self.iconSize = iconSize
 		self.textSize = textSize
 		for i in range(len(programs)):
-			self.programs.append(ProgramWidget(programs[i], iconSize, programs[i].name, textSize, singleClick=(self.setSelected,i), doubleClick=doubleClickT, warning=False, shortcut=shortcuts))
-			self.layout.addWidget(self.programs[i])
+			self.programWidgets.append(ProgramWidget(programs[i], iconSize, programs[i].name, textSize, singleClick=(self.setSelected,i), doubleClick=doubleClickT, warning=False, shortcut=shortcuts))
+			self.layout.addWidget(self.programWidgets[i])
+			self.programWidgets[i].clickedOutside.connect(self.clickedOutside)
 		self.setLayout(self.layout)
 
 	def updateProgramViews(self):
-		for i in range(len(self.programs)):
-			self.programs[i].setSelected(self.selectedProgram == i)
+		for i in range(len(self.programWidgets)):
+			self.programWidgets[i].setSelected(self.selectedProgram == i)
 
 	def setSelected(self, index):
 		self.selectedProgram = index
 		self.updateProgramViews()
+		self.selectedSet.emit(index)
+
+	def clickedOutside(self):
+		for i in range(len(self.programWidgets)):
+			if self.programWidgets[i].getSelected():
+				self.setSelected(i)
+				return
+		self.setSelected(-1)
+
+
 
 
 def singleClickT(name):

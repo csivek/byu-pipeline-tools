@@ -42,3 +42,6 @@ class Body:
 			hist.prettyPrint(level + 2)
 		print(indent + "\t]")
 		print(indent + "}")
+
+	def getPrograms(self):
+		return [x.program for x in self.elements if x.program]

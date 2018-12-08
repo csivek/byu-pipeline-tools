@@ -13,7 +13,10 @@ def getBodiesByUser(user = "current"):
 	gets all bodies associated with a user
 	"""
 	bodies = []
-	bodies.append(Body(getBodyTypes()[0],"house/interior/plant", ["model", "material"], user))
+	body = Body(getBodyTypes()[0],"house/interior/plant", ["model", "material"], user)
+	element = Element("material", (Program("hou", "Houdini", ["hip","hipnc"], "icons/hou.png", "app-launch-scripts/project_houdini.sh")))
+	body.elements.append(element)
+	bodies.append(body)
 	bodies.append(Body(getBodyTypes()[0],"office/interior/plant", ["model", "material"], user))
 	bodies.append(Body(getBodyTypes()[0],"house/exterior/fruit", ["model", "material"], user))
 	bodies.append(Body(getBodyTypes()[0],"chair", ["model", "material"], user))

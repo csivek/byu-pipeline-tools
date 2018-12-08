@@ -1,9 +1,10 @@
 
 class Element:
-	def __init__(self, dept):
+	def __init__(self, dept, program=None):
 		self.dept = dept
 		self.user = None
 		self.steps = {"created":0,} #steps come from config.lion
+		self.program = program
 	def assignUser(self, user):
 		self.user = user
 	def getUser(self):
