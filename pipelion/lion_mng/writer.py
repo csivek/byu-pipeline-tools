@@ -15,15 +15,6 @@ def createBody(path, depts, type):
 	Logger.logUpdate()
 	return body
 
-def deleteBodyFromProduction(path):
-	"""
-	deletes a body for an asset or shot
-	Kendra
-	"""
-
-	Logger.logUpdate()
-	return "SUCCESS"
-
 #deletes the cloned body from a user's private folder (/groups/dand/users/....)
 def deleteBodyClone(path, user):
 

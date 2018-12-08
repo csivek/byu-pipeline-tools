@@ -2,6 +2,7 @@ import os
 from .element import Element
 from .history import History
 from .files import *
+from .logger import Logger
 import time
 
 
@@ -31,11 +32,15 @@ class Body:
 		return None
 	def getFilePath(self):
 		return self.type[1].lower() + "/" + self.path.replace("/", "-")
-	def writeSelfToFile(self):
+	def getMyLocation(self):
 		from .reader import ProductionRoot
-		body_home_dir = ProductionRoot() + "/" + self.getFilePath()
-		create_directory(body_home_dir)
-		write_file(body_home_dir, "/body.json", self.toJson())
+		return ProductionRoot() + "/" + self.getFilePath()
+	def writeSelfToFile(self):
+		create_directory(self.getMyLocation())
+		write_file(self.getMyLocation(), "/body.json", self.toJson())
+	def selfDestruct(self):
+		delete_directory(self.getMyLocation())
+		Logger.logUpdate()
 	def toJson(self):
 		json = {}
 		json['type'] = self.type[0]
