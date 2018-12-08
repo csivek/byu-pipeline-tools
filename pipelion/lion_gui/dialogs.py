@@ -24,14 +24,22 @@ class CheckoutEntryController():
     #@Slot()
     def showSyncBodyDialog(self):
         user = os.environ["USER"]
+        print(user)
         conflicts = checkSyncConflictBody(self.body.path,user)
+        print(conflicts)
         if len(conflicts) == 0:
-            syncDialog = QMessageBox()
+            syncDialog = QtWidgets.QMessageBox()
             syncDialog.setText("Asset (" + self.body.path + ") has been synced.")
             syncDialog.exec_()
             return
 
-        syncDialog = CheckoutSyncDialog(self.body, conflicts)
+        #syncDialog = CheckoutSyncDialog(self.body, conflicts)
+        syncDialog = QtWidgets.QMessageBox()
+        syncDialog.setText("There were conflicts with the following files:")
+        syncDialog.setDetailedText(str(syncDialog.conflicts))
+        syncDialog.addButton(QtWidgets.QPushButton("Match Production"), QtWidgets.ButtonRole.AcceptRole)
+        syncDialog.addButton(QtWidgets.QPushButton("Merge"), QtWidgets.ButtonRole.AcceptRole)
+        syncDialog.addButton(QtWidgets.QPushButton("Keep My Changes"), QtWidgets.ButtonRole.AcceptRole)
         syncDialog.exec_()
 
     #@Slot()

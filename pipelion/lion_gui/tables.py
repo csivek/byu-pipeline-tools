@@ -93,6 +93,7 @@ class TableButton(QtWidgets.QPushButton):
 
     def setData(self, data):
         self.setText(data[TableData.Label])
+        self.setStyleSheet(data[TableData.Style])
         if TableData.Action in data:
             self.clicked.connect(data[TableData.Action])
 
@@ -143,9 +144,12 @@ class Table(QtWidgets.QTableWidget):
         headerLabels = [ x[TableData.Label] for x in self.model.headers]
         self.setHorizontalHeaderLabels(headerLabels)
 
+
         horizontalHeader = self.horizontalHeader()
         for i in range(len(self.model.headers)):
             horizontalHeader.setSectionResizeMode(i, self.model.headers[i][TableData.ResizeMode])
+
+        self.horizontalHeader().setVisible(False)
 
         for y in range(self.model.rowCount()):
             for x in range(self.model.columnCount()):
