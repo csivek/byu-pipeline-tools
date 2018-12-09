@@ -28,3 +28,8 @@ def read_file(directory, name=""):
 def get_all_body_summary_filepaths(directory):
 	output = subprocess.check_output([get_script_path("find_bodies"), directory])
 	return filter(None, output.split("\n"))
+
+def check_directory_size(directory):
+	output = subprocess.check_output([get_script_path("size_of_directory"), directory])
+	pieces = output.split()
+	return pieces[0]

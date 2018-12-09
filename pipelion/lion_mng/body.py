@@ -73,6 +73,9 @@ class Body:
 			depts.append(self.elements[dept])
 		return depts
 
+	def getDirectorySize(self):
+		return check_directory_size(self.getMyLocation())
+
 	#overwrites my own data with the json data
 	def fillSelfFromJson(self):
 		other = readJsonSelf()
