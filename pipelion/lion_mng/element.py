@@ -25,11 +25,6 @@ class Element:
 		json['user'] = self.user
 		json['steps'] = self.steps
 		return json
-	def writeSelfToFile(self, parentBody):
-		from .reader import ProductionRoot
-		element_home_dir = ProductionRoot() + "/" + parentBody.getFilePath() + "/" + self.dept
-		create_directory(element_home_dir)
-		write_file(element_home_dir, "/element.json", self.toJson())
 	def prettyPrint(self, level=1):
 		indent = "".join(["\t"]*level)
 		print(indent + "{")

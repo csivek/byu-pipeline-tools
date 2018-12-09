@@ -6,26 +6,21 @@ from body import Body
 from .reader import *
 from .files import *
 
-def createBody(path, depts, type):
-	"""
-	creates a body for an asset or shot, and all of its corresponding metadata and directories
-	"""
-	body = Body(type, path, depts)
-	body.writeSelfToFile()
-	Logger.logUpdate()
-	return body
 
-#deletes the cloned body from a user's private folder (/groups/dand/users/....)
-def deleteBodyClone(path, user):
 
-	return "SUCCESS"
+def cloneDataToUser(body, user):
+	userBody = Body(UserRoot(user), body.type, body.path)
+	userBody.initializeDepartments(body.getDepartments())
+	copy_directory(body.getMyLocation(), userBody.getMyLocation())
+	userBody.writeSelfToFile()
 
-def renameBody(path, new_path):
-	"""
-	renames a body for an asset or shot
-	Kendra
-	"""
-	Logger.logUpdate()
+
+def renameBody(old_body, new_path):
+	renamedBody = Body(old_body.root, old_body.type, new_path)
+	renamedBody.initializeDepartments(old_body.getDepartments())
+	copy_directory(old_body.getMyLocation(), renamedBody.getMyLocation())
+	renamedBody.writeSelfToFile()
+	old_body.selfDestruct()
 	return "SUCCESS"
 
 def addDepartment(dept):
@@ -85,35 +80,6 @@ def moveStep(dept, step, index):
 	find Department in Production
 	call Department.moveStep()
 	Kendra
-	"""
-	Logger.logUpdate()
-	return "SUCCESS"
-
-def openBody(path, dept, user = "current"):
-	"""
-	opens a user's local working file
-	Kendra
-	"""
-	Logger.logUpdate()
-	return "SUCCESS"
-
-def cloneBody(path, dept, user = "current"):
-	"""
-	checkouts an asset, creates a SyncFile (a config file that gives the timestamp
-	of when each department was cloned)
-	Kendra
-	"""
-	Logger.logUpdate()
-	return "SUCCESS"
-
-def syncBody(path, depts, user = "current"):
-	"""
-	syncronizes the user's local body for the checked-out asset
-	Replaces all departments of a body in a user's working directory that are
-	passed in through "depts".
-	Call syncElement on all non-conflicting Elements of a cloned local Body
-
-	Creates a SyncFile (a config file that gives the timestamp of when the element was last synced)
 	"""
 	Logger.logUpdate()
 	return "SUCCESS"
