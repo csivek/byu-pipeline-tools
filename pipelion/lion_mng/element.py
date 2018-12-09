@@ -24,6 +24,7 @@ class Element:
 		json['dept'] = self.dept
 		json['user'] = self.user
 		json['steps'] = self.steps
+		json['program'] = self.program
 		return json
 	def prettyPrint(self, level=1):
 		indent = "".join(["\t"]*level)
