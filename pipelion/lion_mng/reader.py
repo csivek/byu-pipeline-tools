@@ -5,6 +5,7 @@ from .history import History
 from .program import Program
 from .production import Production
 from .department import Department
+from .files import *
 import time
 import random
 
@@ -14,8 +15,10 @@ import random
 
 def ProductionRoot():
 	#TODO Kendra actually get the real production_root
-	return "/users/guest/k/kendradg/Animation/Pipelion/production"
+	return os.environ["BYU_PROJECT_DIR"] + "/production"
 
+def UserRoot(user):
+	return ProductionRoot() + "/users/" + user
 
 
 def getBodiesByUser(user = "current"):
