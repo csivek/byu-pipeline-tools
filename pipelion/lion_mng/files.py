@@ -21,6 +21,10 @@ def write_file(directory, name, obj):
 	json.dump(obj, output, indent=3)
 	output.close()
 
-def read_file(directory, name):
+def read_file(directory, name=""):
 	jsonObj = json.load(open(directory + name))
 	return jsonObj
+
+def get_all_body_summary_filepaths(directory):
+	output = subprocess.check_output([get_script_path("hello_world"), directory])
+	return filter(None, output.split("\n"))

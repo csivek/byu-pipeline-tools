@@ -22,7 +22,6 @@ class Body:
 			self.fillSelfFromJson()
 		#coudln't read the json, initalize an empty self instead
 		except:
-			print("caught an exception")
 			self.history = [History("body", "CREATE", time.time(), os.environ["USER"], "Initialized an empty body for " + self.path)]
 			self.elements = {}
 			self.writeSelfToFile()
@@ -61,6 +60,9 @@ class Body:
 		delete_directory(dept_dir)
 		del self.elements[dept]
 		self.writeSelfToFile()
+
+	def containsDepartment(self, dept):
+		return elem.dept in self.elements
 
 	def getDepartment(self, dept):
 		return self.elements[dept]

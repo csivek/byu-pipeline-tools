@@ -8,69 +8,47 @@ from .department import Department
 from .files import *
 import time
 import random
+import json
 
-
-#TODO Kendra functions to read in config.json stuff
 
 
 def ProductionRoot():
-	#TODO Kendra actually get the real production_root
 	return os.environ["BYU_PROJECT_DIR"] + "/production"
 
 def UserRoot(user):
-	return ProductionRoot() + "/users/" + user
+	return os.environ["BYU_PROJECT_DIR"] + "/users/" + user
 
 
 def getBodiesByUser(user = "current"):
 	"""
 	gets all bodies associated with a user
 	"""
+	body_paths = get_all_body_summary_filepaths(UserRoot(user))
 	bodies = []
-	body = Body(getBodyTypes()[0],"house/interior/plant", ["model", "material"], user)
-	element = Element("material", (Program("hou", "Houdini", ["hip","hipnc"], "icons/hou.png", "app-launch-scripts/project_houdini.sh")))
-	body.elements.append(element)
-	bodies.append(body)
-	bodies.append(Body(getBodyTypes()[0],"office/interior/plant", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[0],"house/exterior/fruit", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[0],"chair", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[0],"chairA", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[0],"chairB", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[0],"tables/broken_table", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[0],"characters/grendy", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[0],"characters/delilah", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"house/interior/plants", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"office/interior/plants", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"house/exterior/fruits", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"chairs", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"chairAs", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"chairBs", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"tables/broken_tables", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"characters/grendys", ["model", "material"], user))
-	bodies.append(Body(getBodyTypes()[1],"characters/delilahs", ["model", "material"], user))
+
+	for path in body_paths:
+		jsonObj = read_file(path)
+		bodies.append(Body(jsonObj['root'], jsonObj['type'], jsonObj['path']))
+
 	return bodies
 
 def getBodyTypes():
 	return [("ASSET","Asset"),("SHOT","Shot")]
 
-def getBodies(path = "root", dept = None):
+def getBodies(dept = None):
 	"""
 	Returns the specified body and all sub bodies that are associated with the specified departments
 	"""
-	body1 = Body(getBodyTypes()[0],"house/interior/plant", ["model", "material"], "csivek")
-	body2 = Body(getBodyTypes()[1],"house/interior", ["model"], "htinney")
-	if path == "root":
-		return [body1,body2]
-	return [body1]
+	body_paths = get_all_body_summary_filepaths(ProductionRoot())
+	bodies = []
 
-def getBody(path = "root"):
-	"""
-	Returns the specified body
-	"""
-	body1 = Body(getBodyTypes()[0], path, ["model", "material"], user)
-	body2 = Body(getBodyTypes()[0], "house/interior", ["model"], "htinney")
-	if path == "root":
-		return body2
-	return body1
+	for path in body_paths:
+		jsonObj = read_file(path)
+		body = Body(jsonObj['root'], jsonObj['type'], jsonObj['path'])
+		if dept == None or body.containsDepartment(dept):
+			bodies.append(body)
+	print("***************************************************************************")
+	return bodies
 
 def getNewHistories(path = "root", user = "current"):
 	"""
