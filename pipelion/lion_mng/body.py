@@ -7,44 +7,60 @@ from .logger import Logger
 import time
 
 
+
 class Body:
 
-	def __init__(self, root, type, path, depts=None):
+	def __init__(self, root, type, path):
 		'''
-		creates a Body instance describing the asset or shot stored in the given filepath
-		if "depts" is specified, it creates directories for them
+		either fills the Body with the data at the given location, or initalizes an empty one
 		'''
 		self.root = root
 		self.type = type
 		self.path = path
-		#TODO actually check if the json is there and read it in
-		jsonSelf = read_file(self.getMyLocation(), "/body.json")
-		print(jsonSelf)
+		#check if the json is there and read it in
+		try:
+			self.fillSelfFromJson()
+		#coudln't read the json, initalize an empty self instead
+		except:
+			print("caught an exception")
+			self.history = [History("body", "CREATE", time.time(), os.environ["USER"], "Initialized an empty body for " + self.path)]
+			self.elements = {}
+			self.writeSelfToFile()
+			Logger.logUpdate()
+
 
 	def initializeDepartments(self, depts):
-		self.elements = {}
 		for dept in depts:
 			self.addDepartment(dept)
-		self.history = [History("body","CREATE", time.time(), os.environ["USER"], "Created asset")]
-		self.writeSelfToFile()
 		Logger.logUpdate()
 
-	def setRoot(self, newRoot):
-		self.root = newRoot
+	def addHistory(self, history):
+		self.history.append(history)
+		self.writeSelfToFile()
 
 	def addDepartment(self, dept):
 		elem = dept
 		if (not isinstance(elem, Element)):
-			elem = Element(self, dept) #dept was just a string, make an Element object
-		else:
-			elem.parentBody = self #we already have an Element, just reset its parentBody
+			elem = Element(dept) #dept was just a string, make an Element object
+		if elem.dept in self.elements:
+			return
 		self.elements[elem.dept] = elem
 		element_dir = self.getMyLocation() + "/" + elem.dept
 		create_directory(element_dir)
+		hist = History("body", "ADD DEPARTMENT", time.time(), os.environ["USER"], "Added " + elem.dept + " department")
+		self.history.append(hist)
+		self.writeSelfToFile()
+
+	def assignUserToDepartment(self, user, dept):
+		self.elements[dept].assignUser(user)
+		self.writeSelfToFile()
+		Logger.logUpdate()
 
 	def removeDepartment(self, dept):
-		# TODO: deleteElementDirectory(dept)
-		pass
+		dept_dir = self.getMyLocation() + "/" + dept
+		delete_directory(dept_dir)
+		del self.elements[dept]
+		self.writeSelfToFile()
 
 	def getDepartment(self, dept):
 		return self.elements[dept]
@@ -55,9 +71,11 @@ class Body:
 			depts.append(self.elements[dept])
 		return depts
 
-	def syncSelf(self):
-		#look for extra steps in each element, extra elements added, extra items in History[]
-		print("pulling in any file data I don't have")
+	#overwrites my own data with the json data
+	def fillSelfFromJson(self):
+		other = readJsonSelf()
+		self.history = other.history
+		self.elements = other.elements
 
 	def getFilePath(self):
 		return self.type[1].lower() + "/" + self.path.replace("/", "-")
@@ -77,6 +95,20 @@ class Body:
 	def selfDestruct(self):
 		delete_directory(self.getMyLocation())
 		Logger.logUpdate()
+
+	def readJsonSelf():
+		other = {}
+		jsonSelf = read_file(self.getMyLocation(), "/body.json")
+		other.history = []
+		for histJson in jsonSelf['history']:
+			other.history.append(History(histJson['dept'], histJson['type'], histJson['time'], histJson['user'], histJson['message']))
+		other.elements = {}
+		for elemJson in jsonSelf['elements']:
+			elem = Element(elemJson['dept'], elemJson['program'])
+			other.steps = elemJson['steps']
+			other.user = elemJson['user']
+			other.elements[elem.dept] = elem
+		return other
 
 	def toJson(self):
 		json = {}
