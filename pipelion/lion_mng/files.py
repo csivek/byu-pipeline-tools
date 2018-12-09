@@ -26,5 +26,5 @@ def read_file(directory, name=""):
 	return jsonObj
 
 def get_all_body_summary_filepaths(directory):
-	output = subprocess.check_output([get_script_path("hello_world"), directory])
+	output = subprocess.check_output([get_script_path("find_bodies"), directory])
 	return filter(None, output.split("\n"))
