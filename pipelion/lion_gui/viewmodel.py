@@ -51,7 +51,10 @@ def printThings():
     print("Things")
 
 def checkedOutButtons():
-    controller = CheckoutEntryController()
+    bodies = {}
+    for body in this.userBodies:
+        bodies[body.path] = body
+    controller = CheckoutEntryController(bodies)
     buttons = []
     buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, Styles().disabledButton, TableData.ButtonRoles.Open, controller, controller.showOpenBodyDialog))
     buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, Styles().disabledButton, TableData.ButtonRoles.Sync, controller, controller.showSyncBodyDialog))
@@ -59,8 +62,12 @@ def checkedOutButtons():
     buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, Styles().disabledButton, TableData.ButtonRoles.Delete, controller, controller.showDeleteBodyDialog, True))
     return buttons
 
-def bodyOverViewButtons():
-    controller = BodyOverviewController()
+def bodyOverViewButtons(bodyType):
+    bodyList = [body for body in this.allBodies if body.type[0] == bodyType[0]]
+    bodies = {}
+    for body in bodyList:
+        bodies[body.path] = body
+    controller = BodyOverviewController(bodies)
     buttons = []
     buttons.append(TableData.buttonEntry(Strings.checkout, Styles().checkoutButton, Styles().disabledButton, TableData.ButtonRoles.Checkout, controller, controller.showCheckoutDialog))
     buttons.append(TableData.buttonEntry(Strings.rename, Styles().renameButton, Styles().disabledButton, TableData.ButtonRoles.Rename, controller, controller.showRenameDialog))

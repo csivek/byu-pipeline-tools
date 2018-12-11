@@ -248,12 +248,10 @@ class TableBar(QtWidgets.QLabel):
                     tableButton.setEnabledStyle(False)
 
             if tableButton.data[TableData.Role] == TableData.ButtonRoles.Checkout:
-                if (rowCount > 0):
-                    show = False
-                    for path in self.paths:
-                        print("Syncing " + path)
-                        #Should show if some of them are syncable
-                    tableButton.setEnabledStyle(show)
+                if (rowCount == 1):
+                    tableButton.setEnabledStyle(True)
+                else:
+                    tableButton.setEnabledStyle(False)
 
             if tableButton.data[TableData.Role] == TableData.ButtonRoles.Rename:
                 if (rowCount == 1):

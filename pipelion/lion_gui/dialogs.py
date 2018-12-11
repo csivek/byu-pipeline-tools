@@ -13,13 +13,16 @@ except ImportError:
 from pipelion.lion_mng.reader import *
 from pipelion.lion_mng.body import Body
 from programWidget import ProgramShelfWidget
+from pipelion.lion_mng.writer import cloneDataToUser
 
 class BodyOverviewController():
+    def __init__(self, bodies):
+        self.bodies = bodies
+
     @Slot(list)
     def showCheckoutDialog(self, paths):
-        print("\nWould have checked out")
-        print(paths)
-        return
+        for path in paths:
+            cloneDataToUser(self.bodies[path], os.environ["USER"])
 
     @Slot(str)
     def showRenameDialog(self, path):
@@ -29,21 +32,29 @@ class BodyOverviewController():
 
     @Slot(list)
     def showDeleteBodyDialog(self, paths):
-        print("\nWould have deleted")
-        print(paths)
-        return
+        delete_msg = "Are you sure you want to delete " + str(len(paths)) + " asset(s)"
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Question)
+        msgBox.setText("Delete")
+        msgBox.setInformativeText(delete_msg)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No )
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.No)
+        reply = msgBox.exec_()
+        if reply == QtWidgets.QMessageBox.Yes:
+            for path in paths:
+                self.bodies[path].selfDestruct()
+
 
 
 class CheckoutEntryController():
-
+    def __init__(self, bodies):
+        self.bodies = bodies
     @Slot(str)
     def showOpenBodyDialog(self, path):
-        print("\nWould have opened" + path)
-        return
 
         try:
             print("started from the bottom now we here")
-            openDialog = MultiOpenDialog(self.body)
+            openDialog = MultiOpenDialog(self.bodies[path])
             openDialog.exec_()
         except Exception as e:
             print("This is an exception: ", e)
@@ -81,12 +92,17 @@ class CheckoutEntryController():
 
     @Slot(list)
     def showDeleteBodyDialog(self, paths):
-        print("\nWould have deleted")
-        print(paths)
-        return
-
-        syncDialog = CheckoutSyncDialog(self.body.path)
-        syncDialog.exec_()
+        delete_msg = "Are you sure you want to delete " + str(len(paths)) + " asset(s)"
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Question)
+        msgBox.setText("Delete")
+        msgBox.setInformativeText(delete_msg)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No )
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.No)
+        reply = msgBox.exec_()
+        if reply == QtWidgets.QMessageBox.Yes:
+            for path in paths:
+                self.bodies[path].selfDestruct()
 
 class MultiOpenDialog(QtWidgets.QDialog):
     def __init__(self, body):

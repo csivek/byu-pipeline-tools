@@ -47,6 +47,7 @@ class PageWidget(QtWidgets.QScrollArea):
 class DashboardPage(PageWidget):
     def __init__(self):
         super(DashboardPage, self).__init__(Strings.dashboard)
+        ViewModel.signals.updateProduction.connect(self.updateData)
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):
@@ -56,21 +57,32 @@ class DashboardPage(PageWidget):
     	self.programShelfWidget = ProgramShelfWidget(programs, 100, 14, shortcuts=True)
         pageLayout.addWidget(self.programShelfWidget)
         pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
+        self.tableStack = QtWidgets.QStackedWidget()
         entries, headers = ViewModel.checkedOutTable()
-        topBar = TableBar(ViewModel.checkedOutButtons())
-        pageLayout.addWidget(topBar)
+        self.topBar = TableBar(ViewModel.checkedOutButtons())
+        pageLayout.addWidget(self.topBar)
+        noAssetView = QtWidgets.QLabel("You do not have anything checked out")
+        noAssetView.setAlignment(QtCore.Qt.AlignCenter)
+        self.tableStack.addWidget(noAssetView)
+        self.table = Table(TableModel(entries, headers))
         if len(entries) > 0:
-            table = Table(TableModel(entries, headers))
-            topBar.setTable(table)
-            #table.setAlignment(QtCore.Qt.AlignCenter)
-            pageLayout.addWidget(table)
-        else:
-            pageLayout.addStretch()
-            label = QtWidgets.QLabel("You currently have no assets checked out.")
-            label.setAlignment(QtCore.Qt.AlignCenter)
-            pageLayout.addWidget(label)
-            pageLayout.addStretch()
+            self.topBar.setTable(self.table)
+        self.tableStack.addWidget(self.table)
+        self.tableStack.setCurrentIndex(1 if len(entries) > 0 else 0)
+        pageLayout.addWidget(self.tableStack)
         return pageLayout
+
+    @Slot(str)
+    def updateData(self, str):
+        entries, headers = ViewModel.checkedOutTable()
+        self.tableStack.setCurrentIndex(1 if len(entries) > 0 else 0)
+        self.table.setModel(TableModel(entries, headers))
+        if len(entries) > 0:
+            self.topBar.setTable(self.table)
+
+        #self.tableStack.addWidget(table)
+        self.update()
+
 
 
 class SettingsPage(PageWidget):
@@ -109,7 +121,7 @@ class BodyOverviewPage(PageWidget):
         noAssetView.setAlignment(QtCore.Qt.AlignCenter)
         self.tableStack.addWidget(noAssetView)
         self.table = Table(TableModel(entries, headers))
-        self.topBar = TableBar(ViewModel.bodyOverViewButtons())
+        self.topBar = TableBar(ViewModel.bodyOverViewButtons(self.bodyType))
         pageLayout.addWidget(self.topBar)
         if len(entries) > 0:
             self.topBar.setTable(self.table)
