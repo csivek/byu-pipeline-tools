@@ -109,7 +109,7 @@ class BodyOverviewPage(PageWidget):
         noAssetView.setAlignment(QtCore.Qt.AlignCenter)
         self.tableStack.addWidget(noAssetView)
         self.table = Table(TableModel(entries, headers))
-        self.topBar = TableBar(ViewModel.checkedOutButtons())
+        self.topBar = TableBar(ViewModel.bodyOverViewButtons())
         pageLayout.addWidget(self.topBar)
         if len(entries) > 0:
             self.topBar.setTable(self.table)

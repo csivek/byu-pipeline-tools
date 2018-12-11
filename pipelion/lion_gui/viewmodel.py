@@ -51,11 +51,21 @@ def printThings():
     print("Things")
 
 def checkedOutButtons():
+    controller = CheckoutEntryController()
     buttons = []
-    buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, Styles().disabledButton, this.printThings))
-    buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, Styles().disabledButton, this.printThings))
+    buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, Styles().disabledButton, TableData.ButtonRoles.Open, controller, controller.showOpenBodyDialog))
+    buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, Styles().disabledButton, TableData.ButtonRoles.Sync, controller, controller.showSyncBodyDialog))
     buttons.append(None)
-    buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, Styles().disabledButton, this.printThings))
+    buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, Styles().disabledButton, TableData.ButtonRoles.Delete, controller, controller.showDeleteBodyDialog, True))
+    return buttons
+
+def bodyOverViewButtons():
+    controller = BodyOverviewController()
+    buttons = []
+    buttons.append(TableData.buttonEntry(Strings.checkout, Styles().checkoutButton, Styles().disabledButton, TableData.ButtonRoles.Checkout, controller, controller.showCheckoutDialog))
+    buttons.append(TableData.buttonEntry(Strings.rename, Styles().renameButton, Styles().disabledButton, TableData.ButtonRoles.Rename, controller, controller.showRenameDialog))
+    buttons.append(None)
+    buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, Styles().disabledButton, TableData.ButtonRoles.Delete, controller, controller.showDeleteBodyDialog))
     return buttons
 
 def checkedOutTable():
@@ -71,7 +81,6 @@ def checkedOutTable():
     headers.append(TableData.labelHeader(Strings.departments))
     headers.append(TableData.labelHeader(Strings.size, resizeMode=QtWidgets.QHeaderView.ResizeToContents))
     return entries, headers
-
 
 def bodyOverviewTable(bodyType):
     bodies = [body for body in this.allBodies if body.type[0] == bodyType[0]]
