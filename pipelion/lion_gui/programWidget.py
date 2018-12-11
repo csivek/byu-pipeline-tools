@@ -145,7 +145,7 @@ class ProgramWidget(QtWidgets.QWidget):
 class ProgramShelfWidget(QtWidgets.QWidget):
 	selectedSet = Signal(int)
 
-	def __init__(self, programs, iconSize, textSize, shortcuts=False):
+	def __init__(self, programs, iconSize, textSize, names=None, shortcuts=False):
 		super(ProgramShelfWidget, self).__init__()
 		self.programs = programs
 		self.programWidgets = []
@@ -153,7 +153,10 @@ class ProgramShelfWidget(QtWidgets.QWidget):
 		self.iconSize = iconSize
 		self.textSize = textSize
 		for i in range(len(programs)):
-			self.programWidgets.append(ProgramWidget(programs[i], iconSize, programs[i].name, textSize, singleClick=(self.setSelected,i), doubleClick=(self.setSelected,i), warning=False, shortcut=shortcuts))
+			name = programs[i].name
+			if names:
+				name = names[i]
+			self.programWidgets.append(ProgramWidget(programs[i], iconSize, name, textSize, singleClick=(self.setSelected,i), doubleClick=(self.setSelected,i), warning=False, shortcut=shortcuts))
 			self.layout.addWidget(self.programWidgets[i])
 			self.programWidgets[i].clickedOutside.connect(self.clickedOutside)
 		self.setLayout(self.layout)

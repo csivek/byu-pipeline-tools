@@ -66,7 +66,28 @@ class MultiOpenDialog(QtWidgets.QDialog):
         self.body = body
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(QtWidgets.QLabel("Choose a program to open with:"))
-        self.programShelfWidget = ProgramShelfWidget(self.body.getPrograms(), 50, 14)
+        depts = [x.dept for x in self.body.getPrograms()]
+        '''for i in range(len(getDepartments())):
+            if getDepartments()[i].name in depts:
+                layout.addWidget(QtWidgets.QLabel(getDepartments()[i].name))
+                programs = []
+                for prog in getDepartments()[i].programs:
+                    for program in getPrograms():
+                        if program.id == prog:
+                            programs.append(program)
+                self.programShelfWidgets.append(ProgramShelfWidget(programs, 50, 14))
+                layout.addWidget(self.programShelfWidgets[i])
+                self.programShelfWidgets[i].selectedSet.connect(self.programSelected)'''
+        programs = []
+        names = []
+        for i in range(len(getDepartments())):
+            if getDepartments()[i].name in depts:
+                for prog in getDepartments()[i].programs:
+                    for program in getPrograms():
+                        if program.id == prog:
+                            programs.append(program)
+                            names.append(getDepartments()[i].name)
+        self.programShelfWidget = ProgramShelfWidget(programs, 50, 10, names)
         layout.addWidget(self.programShelfWidget)
         self.programShelfWidget.selectedSet.connect(self.programSelected)
 
@@ -78,15 +99,21 @@ class MultiOpenDialog(QtWidgets.QDialog):
         self.cancelButton.clicked.connect(self.reject)
         hlayout.addWidget(self.openButton)
         hlayout.addWidget(self.cancelButton)
+        self.accepted.connect(self.open)
 
         layout.addLayout(hlayout)
         self.setLayout(layout)
 
         self.selectedProgram = None
 
+    def open(self):
+        pathToFile = ProductionRoot() + "/" + self.body.type[0] + "/" + self.body.path + "/" + "Model" + "/"+ "model" + "." + self.selectedProgram.extension
+        self.selectedProgram.runProgram([pathToFile])
+
     def programSelected(self, i):
         if i == -1:
-            self.openButton.setEnabled(False)
+            pass
+            #self.openButton.setEnabled(False)
         else:
             self.openButton.setEnabled(True)
             self.selectedProgram = self.programShelfWidget.programs[i]

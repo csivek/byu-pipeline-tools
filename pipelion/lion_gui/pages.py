@@ -14,6 +14,7 @@ from tables import *
 import viewmodel as ViewModel
 from programWidget import ProgramShelfWidget
 from dialogs import CreateBodyController
+from dialogs import *
 
 
 class PageWidget(QtWidgets.QScrollArea):
@@ -56,7 +57,6 @@ class DashboardPage(PageWidget):
         pageLayout.addWidget(self.programShelfWidget)
         pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
         entries, headers = ViewModel.checkedOutTable()
-        print(entries)
         topBar = TableBar(ViewModel.checkedOutButtons())
         pageLayout.addWidget(topBar)
         if len(entries) > 0:

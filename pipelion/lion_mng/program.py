@@ -12,12 +12,17 @@ class Program:
 
 	def runProgram(self, args):
 		print("Running " + str(self.name))
+		print("ARGS " + str(args))
 		launchScriptLoc = self.launchScript
 		if self.launchScript[0] != "/":
 			launchScriptLoc = Directories.toolsDir() + "/" + self.launchScript
 		my_env = os.environ.copy()
 		my_env["LD_LIBRARY_PATH"] = ""
-		subprocess.Popen(launchScriptLoc, env=my_env)
+		command = [launchScriptLoc]
+		for arg in args:
+			command.append(arg)
+		print("COMMANDS " + str(command))
+		subprocess.Popen(command, env=my_env)
 		#subprocess.call("python3 launchHoudini.py", shell=True)
 		#pid = subprocess.Popen(args=["gnome-terminal", "--command=" + launchScriptLoc]).pid
 		#print pid

@@ -154,4 +154,4 @@ class Body:
 		print(indent + "}")
 
 	def getPrograms(self):
-		return [x.program for x in self.elements if x.program]
+		return [self.elements[elemkey] for elemkey in self.elements]

@@ -19,5 +19,7 @@ export XBMLANGPATH=${BYU_TOOLS_DIR}/maya-tools/shelf/icons/%B
 # Change directories so current directory is not in the tools folder
 cd ${USER_DIR}
 
+echo $@
+
 echo "Starting Maya..."
-maya -script ${MAYA_SHELF_DIR}/byu_shelf.mel &
+maya $@ -script ${MAYA_SHELF_DIR}/byu_shelf.mel &
