@@ -49,12 +49,26 @@ class SideBarLink(QtWidgets.QLabel):
     def __init__(self, page, index):
         self.page = page
         self.index = index
+        self.selected = (index == 0)
         super(SideBarLink, self).__init__(self.page.pageLabel)
         if self.page.isNestedPage:
             self.setObjectName("nested")
 
     def mousePressEvent(self, event):
         self.clicked.emit(self.index)
+        self.selected = True
+
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+        if self.selected:
+            painter.setBrush(QtGui.QBrush(QtGui.QColor.fromRgb(200,120,0,255)))
+            painter.setPen(QtGui.QColor.fromRgb(0,0,0,0))
+            painter.drawRect(0,0,self.width(),self.height())
+        super(SideBarLink, self).paintEvent(event)
+
+    def setSelected(self, selected):
+        self.selected = selected
+        self.update()
 
 class SideBarLayout(QtWidgets.QVBoxLayout):
     def __init__(self, screenLayout):
@@ -71,9 +85,15 @@ class SideBarLayout(QtWidgets.QVBoxLayout):
             linkWidget = SideBarLink(page, count)
             self.links.append(linkWidget)
             self.addWidget(linkWidget)
-            linkWidget.clicked.connect(self.screenLayout.setCurrentIndex)
+            linkWidget.clicked.connect(self.updateViews)
             count += 1
         self.addStretch()
+
+    def updateViews(self, index):
+        self.screenLayout.setCurrentIndex(index)
+        for i in range(len(self.links)):
+            self.links[i].setSelected(i == index)
+        self.update()
 
     def logoWidget(self, size):
         logoImage = QtGui.QImage(PipelionResources().logo())

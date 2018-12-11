@@ -86,11 +86,13 @@ def bodyOverviewTable(bodyType):
         for elementkey in body.elements:
             departmentsLabel += body.elements[elementkey].dept + " "
         row.append(TableData.buttonEntry(Strings.rename, Styles.renameButton, lambda: Dialogs().showRenameBodyDialog(body.path)))
+        row.append(TableData.buttonEntry(Strings.checkout, Styles.checkoutButton, lambda: Dialogs().showRenameBodyDialog(body.path)))
         tableData[body.path] = row
 
     headers = []
     headers.append(TableData.labelHeader(Strings.items))
     headers.append(TableData.buttonHeader(Strings.open))
+    headers.append(TableData.buttonHeader(Strings.checkout))
     return tableData, headers
 
 def departmentTable():
