@@ -8,6 +8,7 @@ try:
 except ImportError:
     from PySide2 import QtWidgets, QtGui, QtCore
     from PySide2.QtCore import Slot
+from resources import Styles
 
 class TableData():
     # Data members that act as keys in a dictionary
@@ -92,14 +93,43 @@ class TableButton(QtWidgets.QPushButton):
         self.setData(data)
 
     def setData(self, data):
-        self.setText(data[TableData.Label])
-        self.setStyleSheet(data[TableData.Style])
-        if TableData.Action in data:
-            self.clicked.connect(data[TableData.Action])
+        self.data = data
+        self.setText(self.data[TableData.Label])
+        self.setStyleSheet(self.data[TableData.Style])
+        if TableData.Action in self.data:
+            self.clicked.connect(self.data[TableData.Action])
 
-class TableBar:
-    def __init__(self, buttonEntry):
-        self.tableEntry = TableEntry(buttonEntry)
+    def setAction(self, newAction):
+        self.clicked.disconnect(self.data[TableData.Action])
+        self.data[TableData.Action] = newAction
+        self.clicked.connect(self.data[TableData.Action])
+
+class TableBar(QtWidgets.QLabel):
+    def __init__(self, buttonEntries):
+        super(TableBar, self).__init__()
+        layout = QtWidgets.QHBoxLayout()
+        self.tableEntries = []
+        for buttonEntry in buttonEntries:
+            if buttonEntry is not None:
+                print (buttonEntry)
+                tableButton = TableButton(buttonEntry)
+                tableButton.setFixedHeight(20)
+                self.tableEntries.append(tableButton)
+                layout.addWidget(tableButton)
+                print (tableButton)
+            else:
+                layout.addStretch()
+
+        self.setFixedHeight(40)
+        self.setStyleSheet(Styles.tableBar)
+        self.setAlignment(QtCore.Qt.AlignCenter)
+        self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+        self.setLayout(layout)
+
+    @Slot(str)
+    def selected(self, path):
+        print(path)
+
 
 class TableModel():
     def __init__(self, entryData, headers):

@@ -55,11 +55,18 @@ class DashboardPage(PageWidget):
         pageLayout.addWidget(self.programShelfWidget)
         pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
         tableData, headers = ViewModel.checkedOutTable()
-        table = QtWidgets.QLabel("You currently have no assets checked out.")
-        table.setAlignment(QtCore.Qt.AlignCenter)
+        topBar = TableBar(ViewModel.checkedOutButtons())
+        pageLayout.addWidget(topBar)
         if len(tableData) > 0:
             table = Table(TableModel(tableData, headers))
-        pageLayout.addWidget(table)
+            #table.setAlignment(QtCore.Qt.AlignCenter)
+            pageLayout.addWidget(table)
+        else:
+            pageLayout.addStretch()
+            label = QtWidgets.QLabel("You currently have no assets checked out.")
+            label.setAlignment(QtCore.Qt.AlignCenter)
+            pageLayout.addWidget(label)
+            pageLayout.addStretch()
         return pageLayout
 
 
