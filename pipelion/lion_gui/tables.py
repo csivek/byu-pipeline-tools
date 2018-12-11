@@ -137,7 +137,7 @@ class Table(QtWidgets.QTableWidget):
     def setModel(self, model):
         self.model = model
         self.setRowCount(self.model.rowCount())
-        self.setColumnCount(self.model.columnCount())
+        self.setColumnCount(len(self.model.headers))
         self.verticalHeader().setVisible(False)
 
         #print self.model.headers

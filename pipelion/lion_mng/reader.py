@@ -19,10 +19,12 @@ def UserRoot(user):
 	return os.environ["BYU_PROJECT_DIR"] + "/users/" + user
 
 
-def getBodiesByUser(user = "current"):
+def getBodiesByUser(user=None):
 	"""
 	gets all bodies associated with a user
 	"""
+	if not user:
+		user = os.environ['USER']
 	body_paths = get_all_body_summary_filepaths(UserRoot(user))
 	bodies = []
 
@@ -33,7 +35,7 @@ def getBodiesByUser(user = "current"):
 	return bodies
 
 def getBodyTypes():
-	return [("ASSET","Asset"),("SHOT","Shot")]
+	return [("asset","Asset"),("shot","Shot")]
 
 def getBodies(dept = None):
 	"""
@@ -79,7 +81,7 @@ def getDepartments():
 	depts.append(Department("cloth","asset","Cloth",["maya","hou"],["Rough Draft", "Final"]))
 	depts.append(Department("layout","shot","Layout",["maya","hou"],["Rough Draft", "Final"]))
 	depts.append(Department("anim","shot","Animation",["maya"],["Rough Draft", "Final"]))
-	depts.append(Department("fx","shot","VFX",["hou"],["Rough Pass", "In Context", "Lit" ,"Final"]))
+	depts.append(Department("fx","shot","VFXUserRoot",["hou"],["Rough Pass", "In Context", "Lit" ,"Final"]))
 	depts.append(Department("sim","shot","Simulation",["maya","hou"],["Rough Draft", "Final"]))
 	depts.append(Department("lighting","shot","Lighting",["maya","hou"],["Rough Draft", "Final"]))
 	depts.append(Department("render","shot","Render",["file"],["Previs", "Final"]))
@@ -87,7 +89,7 @@ def getDepartments():
 	return depts
 
 def CurrentProduction():
-	return Production("Death and Delilah", getDepartments(), getPrograms(), [("asset","Assets"),("shot","Shots")])
+	return Production("Death and Delilah", getDepartments(), getPrograms(), [("asset","Asset"),("shot","Shot")])
 
 def checkSyncConflictBody(path, user):
 	"""

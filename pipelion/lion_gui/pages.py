@@ -13,6 +13,7 @@ from resources import *
 from tables import *
 import viewmodel as ViewModel
 from programWidget import ProgramShelfWidget
+from dialogs import CreateBodyController
 
 class PageWidget(QtWidgets.QScrollArea):
     def __init__(self, pageLabel, isNestedPage=False):
@@ -54,7 +55,10 @@ class DashboardPage(PageWidget):
         pageLayout.addWidget(self.programShelfWidget)
         pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
         tableData, headers = ViewModel.checkedOutTable()
-        table = Table(TableModel(tableData, headers))
+        table = QtWidgets.QLabel("You currently have no assets checked out.")
+        table.setAlignment(QtCore.Qt.AlignCenter)
+        if len(tableData) > 0:
+            table = Table(TableModel(tableData, headers))
         pageLayout.addWidget(table)
         return pageLayout
 
@@ -86,8 +90,17 @@ class BodyOverviewPage(PageWidget):
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):
-        pageLayout = QtWidgets.QHBoxLayout()
-        pageLayout.addWidget(QtWidgets.QLabel("This is a body overview page for " + self.pageLabel))
+        pageLayout = QtWidgets.QVBoxLayout()
+        tableData, headers = ViewModel.bodyOverviewTable(self.bodyType)
+        table = QtWidgets.QLabel("This is a body overview page for " + self.pageLabel)
+        table.setAlignment(QtCore.Qt.AlignCenter)
+        if len(tableData) > 0:
+            table = Table(TableModel(tableData, headers))
+        pageLayout.addWidget(table)
+        createButton = QtWidgets.QPushButton("Create " + self.bodyType[1])
+        self.cbc = CreateBodyController(self.bodyType)
+        createButton.clicked.connect(self.cbc.showCreateBodyDialog)
+        pageLayout.addWidget(createButton)
         return pageLayout
 
 class DepartmentPage(PageWidget):

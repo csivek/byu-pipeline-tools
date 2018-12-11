@@ -9,6 +9,16 @@ import time
 
 
 class Body:
+	'''
+	Static method which creates a body and returns it. This is modeled after the
+	Houdini Object Module. It is analogous to hou.Node.createNode(args).
+	http://www.sidefx.com/docs/houdini/hom/hou/Node.html
+	'''
+	@staticmethod
+	def createBody(root, type, path, depts):
+		body = Body(root, type, path)
+		body.initializeDepartments(depts)
+		return body
 
 	def __init__(self, root, type, path):
 		'''
@@ -17,6 +27,7 @@ class Body:
 		self.root = root
 		self.type = type
 		self.path = path
+		print(self.path)
 		#check if the json is there and read it in
 		try:
 			self.fillSelfFromJson()

@@ -26,8 +26,11 @@ def read_file(directory, name=""):
 	return jsonObj
 
 def get_all_body_summary_filepaths(directory):
-	output = subprocess.check_output([get_script_path("find_bodies"), directory])
-	return filter(None, output.split("\n"))
+	if os.path.exists(directory):
+		output = subprocess.check_output([get_script_path("find_bodies"), directory])
+		return filter(None, output.split("\n"))
+	else:
+		return []
 
 def check_directory_size(directory):
 	output = subprocess.check_output([get_script_path("size_of_directory"), directory])

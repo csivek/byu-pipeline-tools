@@ -94,7 +94,7 @@ class ProgramImageButton(QtWidgets.QAbstractButton):
 
 	def checkDoubleClick(self):
 		if (time.time() - self.lastClick) < 0.25:
-			self.doubleClick()
+			self.doubleClick[0](self.doubleClick[1])
 			return True
 		self.lastClick = time.time()
 		return False
@@ -106,6 +106,8 @@ class ProgramWidget(QtWidgets.QWidget):
 
 	def __init__(self, program, size, text, fontSize, singleClick=None, doubleClick=None, selected=False, warning=False, shortcut=False, parent=None):
 		super(ProgramWidget, self).__init__()
+		if shortcut:
+			doubleClick = (program.runProgram, [])
 		self.projectButton = ProgramImageButton(program, size, singleClick, doubleClick, selected, warning, shortcut, parent)
 		self.text = QtWidgets.QLabel(text)
 		self.text.setFont(QtGui.QFont("Arial",fontSize,QtGui.QFont.Bold))

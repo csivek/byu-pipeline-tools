@@ -66,15 +66,22 @@ def checkedOutTable():
     headers.append(TableData.buttonHeader(Strings.delete))
     return tableData, headers
 
-def bodyOverviewTable():
+def bodyOverviewTable(bodyType):
+    bodies = [body for body in this.allBodies if body.type[0] == bodyType[0]]
     tableData = {}
-    for body in this.allBodies:
+    for body in bodies:
         row = []
-        row.append(this.labelEntry(body.path))
+        row.append(TableData.labelEntry(body.path))
         departmentsLabel = ""
         for element in body.elements:
             departmentsLabel += element.dept + " "
-        row.append(this.buttonEntry(Strings.rename, Styles.renameButton, lambda: Dialogs().showRenameBodyDialog(body.path)))
+        row.append(TableData.buttonEntry(Strings.rename, Styles.renameButton, lambda: Dialogs().showRenameBodyDialog(body.path)))
+        tableData[body.path] = row
+
+    headers = []
+    headers.append(TableData.labelHeader(Strings.items))
+    headers.append(TableData.buttonHeader(Strings.open))
+    return tableData, headers
 
 def departmentTable():
     tableData = {}

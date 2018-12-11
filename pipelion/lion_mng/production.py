@@ -30,3 +30,7 @@ class Directories:
             return path
         except:
             return ""
+
+    @staticmethod
+    def toolsDir():
+        return os.environ["BYU_TOOLS_DIR"]
