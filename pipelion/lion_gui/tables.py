@@ -156,7 +156,7 @@ class TableBar(QtWidgets.QLabel):
         for range in self.table.selectedRanges():
             rowCount += range.rowCount()
         if (rowCount == 1):
-
+            print("things")
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -201,7 +201,11 @@ class TableModel(QtCore.QAbstractTableModel):
 class Table(QtWidgets.QTableWidget):
     def __init__(self, model):
         super(Table, self).__init__()
+        self.setModel(model)
+
+    def setModel(self, model):
         self.model = model
+
         self.setRowCount(self.model.rowCount())
         self.setColumnCount(len(self.model.headers))
         self.verticalHeader().setVisible(False)
@@ -217,5 +221,6 @@ class Table(QtWidgets.QTableWidget):
             for column in range(self.model.columnCount()):
                 self.setItem(row,column,QtWidgets.QTableWidgetItem(str(self.model.entries[row][column])))
 
-        self.resizeColumnsToContents()
+        #self.resizeColumnsToContents()
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.update()

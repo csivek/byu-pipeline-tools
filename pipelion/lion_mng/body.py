@@ -89,9 +89,9 @@ class Body:
 
 	#overwrites my own data with the json data
 	def fillSelfFromJson(self):
-		other = readJsonSelf()
-		self.history = other.history
-		self.elements = other.elements
+		other = self.readJsonSelf()
+		self.history = other['history']
+		self.elements = other['elements']
 
 	def getFilePath(self):
 		return self.type[1].lower() + "/" + self.path.replace("/", "-")
@@ -112,18 +112,18 @@ class Body:
 		delete_directory(self.getMyLocation())
 		Logger.logUpdate()
 
-	def readJsonSelf():
+	def readJsonSelf(self):
 		other = {}
 		jsonSelf = read_file(self.getMyLocation(), "/body.json")
-		other.history = []
+		other['history'] = []
 		for histJson in jsonSelf['history']:
-			other.history.append(History(histJson['dept'], histJson['type'], histJson['time'], histJson['user'], histJson['message']))
-		other.elements = {}
+			other['history'].append(History(histJson['dept'], histJson['type'], histJson['time'], histJson['user'], histJson['message']))
+		other['elements'] = {}
 		for elemJson in jsonSelf['elements']:
 			elem = Element(elemJson['dept'], elemJson['program'])
-			other.steps = elemJson['steps']
-			other.user = elemJson['user']
-			other.elements[elem.dept] = elem
+			other['steps'] = elemJson['steps']
+			other['user'] = elemJson['user']
+			other['elements'][elem.dept] = elem
 		return other
 
 	def toJson(self):

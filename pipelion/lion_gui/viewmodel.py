@@ -1,6 +1,7 @@
 import sys
 import os
 import threading
+import traceback
 
 try:
     from PySide import QtGui as QtGui
@@ -40,6 +41,8 @@ def endLoggerThread():
 @Slot(str)
 def productionUpdate(update):
     print("Production update in viewmodel: " + update)
+    this.userBodies = Reader.getBodiesByUser()
+    this.allBodies = Reader.getBodies()
     this.signals.updateProduction.emit(update)
     this.signals.updateDepartment.emit(update)
     this.signals.updateBody.emit(update)
@@ -58,7 +61,7 @@ def checkedOutButtons():
 def checkedOutTable():
     entries = []
     for body in this.userBodies:
-        departments = " ".join(dept.name for dept in body.getDepartments())
+        departments = ", ".join(elem.dept for elem in body.getDepartments())
         entry = (body.path, body.type[1], departments, body.getDirectorySize())
         print(entry)
         entries.append(entry)
@@ -74,7 +77,7 @@ def bodyOverviewTable(bodyType):
     bodies = [body for body in this.allBodies if body.type[0] == bodyType[0]]
     entries = []
     for body in bodies:
-        departments = " ".join(dept.name for dept in body.getDepartments())
+        departments = ", ".join(elem.dept for elem in body.getDepartments())
         entries.append((body.path, departments))
     headers = []
     headers.append(TableData.labelHeader(Strings.path, resizeMode=QtWidgets.QHeaderView.Interactive))

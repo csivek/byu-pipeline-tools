@@ -50,6 +50,7 @@ class Strings():
     nochanges = "No Changes"
     delete = "Delete"
     rename = "Rename"
+    checkout = "Checkout"
     change_dot_dot_dot = "Change..."
     broken_data = "Broken Data"
     items = "Items"
@@ -84,6 +85,9 @@ class Styles():
         background-color: gray
     '''
 
+    checkoutButton = '''
+        background-color: green;
+    '''
     tableBar = '''
         QLabel{background-color: #6a827c; font-size: 16px; color: white}
     '''
