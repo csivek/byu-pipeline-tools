@@ -15,6 +15,7 @@ class TableData():
     WidgetType = "widget_type"
     Label = "label"
     Style = "style"
+    DisabledStyle = "disabled_style"
     Action = "action"
 
     # Data members for labels
@@ -39,11 +40,12 @@ class TableData():
         return header
 
     @staticmethod
-    def buttonEntry(label, style, action=None):
+    def buttonEntry(label, style, disabledStyle, action=None):
         entry = {}
         entry[TableData.WidgetType] = TableData.WidgetTypes.Button
         entry[TableData.Label] = label
         entry[TableData.Style] = style
+        entry[TableData.DisabledStyle] = disabledStyle
         if action is not None:
             entry[TableData.Action] = action
         return entry
@@ -88,6 +90,12 @@ class TableLabel(QtWidgets.QLabel):
         self.setText(data[TableData.Label])
 
 class TableButton(QtWidgets.QPushButton):
+
+    class Role:
+        OpenButton = "openButton"
+        SyncButton = "syncButton"
+        DeleteButton = "deleteButton"
+
     def __init__(self, data):
         super(TableButton, self).__init__()
         self.setData(data)
@@ -95,7 +103,7 @@ class TableButton(QtWidgets.QPushButton):
     def setData(self, data):
         self.data = data
         self.setText(self.data[TableData.Label])
-        self.setStyleSheet(self.data[TableData.Style])
+        self.setEnabledStyle(False)
         if TableData.Action in self.data:
             self.clicked.connect(self.data[TableData.Action])
 
@@ -104,17 +112,28 @@ class TableButton(QtWidgets.QPushButton):
         self.data[TableData.Action] = newAction
         self.clicked.connect(self.data[TableData.Action])
 
+    def setEnabledStyle(self, enabled):
+        if enabled:
+            self.setStyleSheet(self.data[TableData.Style])
+            self.repaint()
+        else:
+            self.setStyleSheet(self.data[TableData.DisabledStyle])
+            self.repaint()
+
+        self.setEnabled(enabled)
+
 class TableBar(QtWidgets.QLabel):
     def __init__(self, buttonEntries):
         super(TableBar, self).__init__()
         layout = QtWidgets.QHBoxLayout()
-        self.tableEntries = []
+        self.tableButtons = []
         for buttonEntry in buttonEntries:
             if buttonEntry is not None:
                 print (buttonEntry)
                 tableButton = TableButton(buttonEntry)
                 tableButton.setFixedHeight(20)
-                self.tableEntries.append(tableButton)
+                tableButton.setEnabledStyle(False)
+                self.tableButtons.append(tableButton)
                 layout.addWidget(tableButton)
                 print (tableButton)
             else:
@@ -126,31 +145,26 @@ class TableBar(QtWidgets.QLabel):
         self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
         self.setLayout(layout)
 
-    @Slot(str)
-    def selected(self, path):
-        print(path)
+    def setTable(self, table):
+        self.table = table
+        self.table.itemSelectionChanged.connect(self.selectionChanged)
+
+    @Slot()
+    def selectionChanged(self):
+        print(self.table.selectedRanges())
+        rowCount = 0
+        for range in self.table.selectedRanges():
+            rowCount += range.rowCount()
+        if (rowCount == 1):
 
 
-class TableModel():
-    def __init__(self, entryData, headers):
+
+class TableModel(QtCore.QAbstractTableModel):
+    def __init__(self, entries, headers):
         #print("\n\n\nTABLE MODEL\n\n\n")
         #print(entryData)
-        self.entries = []
-        for row in entryData.keys():
-            entry = []
-            for column in entryData[row]:
-                entry.append(TableEntry(column))
-            self.entries.append(entry)
+        self.entries = entries
         self.headers = headers
-
-    def entryAtIndex(self, row, column):
-        return self.entries[row][column]
-
-    def widgetAtIndex(self, row, column):
-        return self.entryAtIndex(row, column).widget
-
-    def updateSlotAtIndex(self, row, column):
-        return self.widgetAtIndex(row, column).updateData
 
     def rowCount(self):
         return len(self.entries)
@@ -161,33 +175,47 @@ class TableModel():
         else:
             return 0
 
-class Table(QtWidgets.QTableWidget):
-    def __init__(self, tableModel):
-        super(Table, self).__init__()
-        self.setModel(tableModel)
-        # enable sorting
-        #self.setSortingEnabled(True)
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+        elif role != QtCore.Qt.DisplayRole:
+            return None
+        return str(self.entries[index.row()][index.column()])
 
-    def setModel(self, model):
+    def headerData(self, col, orientation, role):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+            return self.header[col]
+        return None
+
+    def sort(self, col, order):
+        """sort table by given column number col"""
+        self.emit(SIGNAL("layoutAboutToBeChanged()"))
+        self.mylist = sorted(self.mylist,
+            key=operator.itemgetter(col))
+        if order == QtCore.Qt.DescendingOrder:
+            self.mylist.reverse()
+        self.emit(SIGNAL("layoutChanged()"))
+
+
+
+class Table(QtWidgets.QTableWidget):
+    def __init__(self, model):
+        super(Table, self).__init__()
         self.model = model
         self.setRowCount(self.model.rowCount())
         self.setColumnCount(len(self.model.headers))
         self.verticalHeader().setVisible(False)
 
-        #print self.model.headers
-        headerLabels = [ x[TableData.Label] for x in self.model.headers]
-        self.setHorizontalHeaderLabels(headerLabels)
-
+        self.setHorizontalHeaderLabels([header[TableData.Label] for header in self.model.headers])
 
         horizontalHeader = self.horizontalHeader()
         for i in range(len(self.model.headers)):
             horizontalHeader.setSectionResizeMode(i, self.model.headers[i][TableData.ResizeMode])
 
-        self.horizontalHeader().setVisible(False)
-
-        for y in range(self.model.rowCount()):
-            for x in range(self.model.columnCount()):
-                #print(self.model.entryAtIndex(y, x).data)
-                self.setCellWidget(y, x, self.model.widgetAtIndex(y, x))
+        self.setSortingEnabled(True)
+        for row in range(self.model.rowCount()):
+            for column in range(self.model.columnCount()):
+                self.setItem(row,column,QtWidgets.QTableWidgetItem(str(self.model.entries[row][column])))
 
         self.resizeColumnsToContents()
+        self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)

@@ -49,46 +49,38 @@ def printThings():
 
 def checkedOutButtons():
     buttons = []
-    buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, this.printThings))
-    buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, this.printThings))
+    buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, Styles().disabledButton, this.printThings))
+    buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, Styles().disabledButton, this.printThings))
     buttons.append(None)
-    buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, this.printThings))
+    buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, Styles().disabledButton, this.printThings))
     return buttons
 
 def checkedOutTable():
-    tableData = {}
+    entries = []
     for body in this.userBodies:
-        controller = CheckoutEntryController(body)
-        row = []
-        row.append(TableData.labelEntry(body.path))
-
-        newHistories = Reader.getNewHistories(body.path)
-
-        tableData[body.path] = row
-
+        departments = " ".join(dept.name for dept in body.getDepartments())
+        entry = (body.path, body.type[1], departments, body.getDirectorySize())
+        print(entry)
+        entries.append(entry)
     headers = []
-    headers.append(TableData.labelHeader(Strings.items))
-    headers.append(TableData.buttonHeader(Strings.open))
-    headers.append(TableData.buttonHeader(Strings.sync))
-    headers.append(TableData.buttonHeader(Strings.delete))
-    return tableData, headers
+    headers.append(TableData.labelHeader(Strings.path, resizeMode=QtWidgets.QHeaderView.Interactive))
+    headers.append(TableData.labelHeader(Strings.type, resizeMode=QtWidgets.QHeaderView.ResizeToContents))
+    headers.append(TableData.labelHeader(Strings.departments))
+    headers.append(TableData.labelHeader(Strings.size, resizeMode=QtWidgets.QHeaderView.ResizeToContents))
+    return entries, headers
+
 
 def bodyOverviewTable(bodyType):
     bodies = [body for body in this.allBodies if body.type[0] == bodyType[0]]
-    tableData = {}
+    entries = []
     for body in bodies:
-        row = []
-        row.append(TableData.labelEntry(body.path))
-        departmentsLabel = ""
-        for element in body.elements:
-            departmentsLabel += element.dept + " "
-        row.append(TableData.buttonEntry(Strings.rename, Styles.renameButton, lambda: Dialogs().showRenameBodyDialog(body.path)))
-        tableData[body.path] = row
-
+        departments = " ".join(dept.name for dept in body.getDepartments())
+        entries.append((body.path, departments))
     headers = []
-    headers.append(TableData.labelHeader(Strings.items))
-    headers.append(TableData.buttonHeader(Strings.open))
-    return tableData, headers
+    headers.append(TableData.labelHeader(Strings.path, resizeMode=QtWidgets.QHeaderView.Interactive))
+    headers.append(TableData.labelHeader(Strings.departments, resizeMode=QtWidgets.QHeaderView.Stretch))
+    return entries, headers
+
 
 def departmentTable():
     tableData = {}

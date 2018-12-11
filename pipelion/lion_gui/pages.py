@@ -54,11 +54,13 @@ class DashboardPage(PageWidget):
     	self.programShelfWidget = ProgramShelfWidget(programs, 100, 14, shortcuts=True)
         pageLayout.addWidget(self.programShelfWidget)
         pageLayout.addWidget(self.headerWidget(Strings.checkedoutitems))
-        tableData, headers = ViewModel.checkedOutTable()
+        entries, headers = ViewModel.checkedOutTable()
+        print(entries)
         topBar = TableBar(ViewModel.checkedOutButtons())
         pageLayout.addWidget(topBar)
-        if len(tableData) > 0:
-            table = Table(TableModel(tableData, headers))
+        if len(entries) > 0:
+            table = Table(TableModel(entries, headers))
+            topBar.setTable(table)
             #table.setAlignment(QtCore.Qt.AlignCenter)
             pageLayout.addWidget(table)
         else:
@@ -98,11 +100,14 @@ class BodyOverviewPage(PageWidget):
 
     def layoutPage(self):
         pageLayout = QtWidgets.QVBoxLayout()
-        tableData, headers = ViewModel.bodyOverviewTable(self.bodyType)
+        entries, headers = ViewModel.bodyOverviewTable(self.bodyType)
+        topBar = TableBar(ViewModel.checkedOutButtons())
+        pageLayout.addWidget(topBar)
         table = QtWidgets.QLabel("This is a body overview page for " + self.pageLabel)
         table.setAlignment(QtCore.Qt.AlignCenter)
-        if len(tableData) > 0:
-            table = Table(TableModel(tableData, headers))
+        if len(entries) > 0:
+            table = Table(TableModel(entries, headers))
+            topBar.setTable(table)
         pageLayout.addWidget(table)
         createButton = QtWidgets.QPushButton("Create " + self.bodyType[1])
         self.cbc = CreateBodyController(self.bodyType)

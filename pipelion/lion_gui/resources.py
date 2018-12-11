@@ -51,25 +51,37 @@ class Strings():
     delete = "Delete"
     rename = "Rename"
     change_dot_dot_dot = "Change..."
-    items = "Items"
     broken_data = "Broken Data"
+    items = "Items"
+    path = "Path"
+    type = "Type"
+    departments = "Departments"
+    size = "Size"
 
 class Styles():
     openButton = '''
-        background-color: yellow;
+        background-color: yellow
     '''
+
     syncButton = '''
-        background-color: green;
+        background-color: green
     '''
+
     deleteButton = '''
-        background-color: red;
+        background-color: red
     '''
+
     renameButton = '''
         background-color: purple;
         color: white
     '''
+
     changeButton = '''
         background-color: orange
+    '''
+
+    disabledButton = '''
+        background-color: gray
     '''
 
     tableBar = '''
