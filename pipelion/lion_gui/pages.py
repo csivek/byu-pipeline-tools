@@ -15,6 +15,7 @@ import viewmodel as ViewModel
 from programWidget import ProgramShelfWidget
 from dialogs import CreateBodyController
 
+
 class PageWidget(QtWidgets.QScrollArea):
     def __init__(self, pageLabel, isNestedPage=False):
         super(PageWidget, self).__init__()
@@ -87,21 +88,34 @@ class BodyOverviewPage(PageWidget):
     def __init__(self, bodyType):
         self.bodyType = bodyType
         super(BodyOverviewPage, self).__init__(self.bodyType[1])
+        ViewModel.signals.updateProduction.connect(self.updateData)
+        self.cbc = CreateBodyController(self.bodyType)
         self.setLayout(self.layoutPage())
 
     def layoutPage(self):
         pageLayout = QtWidgets.QVBoxLayout()
+        self.tableStack = QtWidgets.QStackedWidget()
         tableData, headers = ViewModel.bodyOverviewTable(self.bodyType)
-        table = QtWidgets.QLabel("This is a body overview page for " + self.pageLabel)
-        table.setAlignment(QtCore.Qt.AlignCenter)
-        if len(tableData) > 0:
-            table = Table(TableModel(tableData, headers))
-        pageLayout.addWidget(table)
+        noAssetView = QtWidgets.QLabel("This is a body overview page for " + self.pageLabel)
+        noAssetView.setAlignment(QtCore.Qt.AlignCenter)
+        self.tableStack.addWidget(noAssetView)
+        self.table = Table(TableModel(tableData, headers))
+        self.tableStack.addWidget(self.table)
+        self.tableStack.setCurrentIndex(1 if len(tableData) > 0 else 0)
+        pageLayout.addWidget(self.tableStack)
         createButton = QtWidgets.QPushButton("Create " + self.bodyType[1])
-        self.cbc = CreateBodyController(self.bodyType)
         createButton.clicked.connect(self.cbc.showCreateBodyDialog)
         pageLayout.addWidget(createButton)
         return pageLayout
+
+    @Slot(str)
+    def updateData(self, str):
+        tableData, headers = ViewModel.bodyOverviewTable(self.bodyType)
+        self.tableStack.setCurrentIndex(1 if len(tableData) > 0 else 0)
+        self.table.setModel(TableModel(tableData, headers))
+        #self.tableStack.addWidget(table)
+        self.update()
+
 
 class DepartmentPage(PageWidget):
     def __init__(self, department):

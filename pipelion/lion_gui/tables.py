@@ -161,3 +161,4 @@ class Table(QtWidgets.QTableWidget):
                 self.setCellWidget(y, x, self.model.widgetAtIndex(y, x))
 
         self.resizeColumnsToContents()
+        self.update()
