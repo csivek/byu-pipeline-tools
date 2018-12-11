@@ -2,6 +2,7 @@
 
 # project_houdini.sh: opens houdini with the project environment
 # @author Brian Kingery & Ben DeMann
+echo "Start of Houdini Launch Script"
 
 if [ -z "${HFS}" ]
 then
@@ -21,6 +22,7 @@ cd -
 
 # source project environment
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 source ${DIR}/project_env.sh
 
 export CURRENT_PROG='Houdini'
