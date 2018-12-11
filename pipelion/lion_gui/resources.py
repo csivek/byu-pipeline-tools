@@ -56,14 +56,13 @@ class Strings():
 
 class Styles():
     openButton = '''
-        background-color: yellow
+        background-color: yellow;
     '''
     syncButton = '''
-        background-color: green
+        background-color: green;
     '''
     deleteButton = '''
         background-color: red;
-        color: white
     '''
     renameButton = '''
         background-color: purple;
@@ -71,4 +70,8 @@ class Styles():
     '''
     changeButton = '''
         background-color: orange
+    '''
+
+    tableBar = '''
+        QLabel{background-color: #6a827c; font-size: 16px; color: white}
     '''

@@ -47,19 +47,26 @@ def productionUpdate(update):
     this.signals.updateDepartment.emit(update)
     this.signals.updateBody.emit(update)
 
+def printThings():
+    print("Things")
+
+def checkedOutButtons():
+    buttons = []
+    buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, this.printThings))
+    buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, this.printThings))
+    buttons.append(None)
+    buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, this.printThings))
+    return buttons
+
 def checkedOutTable():
     tableData = {}
     for body in this.userBodies:
         controller = CheckoutEntryController(body)
         row = []
         row.append(TableData.labelEntry(body.path))
-        row.append(TableData.buttonEntry(Strings.open, Styles().openButton, controller.showOpenBodyDialog))
+
         newHistories = Reader.getNewHistories(body.path)
-        if len(newHistories) > 0:
-            row.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, controller.showSyncBodyDialog))
-        else:
-            row.append(TableData.labelEntry(Strings.nochanges))
-        row.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, controller.showDeleteBodyDialog))
+
         tableData[body.path] = row
 
     headers = []
