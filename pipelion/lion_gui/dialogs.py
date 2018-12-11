@@ -14,12 +14,32 @@ from pipelion.lion_mng.reader import *
 from pipelion.lion_mng.body import Body
 from programWidget import ProgramShelfWidget
 
-class CheckoutEntryController():
-    def __init__(self, body):
-        self.body = body
+class BodyOverviewController():
+    @Slot(list)
+    def showCheckoutDialog(self, paths):
+        print("\nWould have checked out")
+        print(paths)
+        return
 
-    #@Slot()
-    def showOpenBodyDialog(self):
+    @Slot(str)
+    def showRenameDialog(self, path):
+        print("\nWould have renamed")
+        print(path)
+        return
+
+    @Slot(list)
+    def showDeleteBodyDialog(self, paths):
+        print("\nWould have deleted")
+        print(paths)
+        return
+
+
+class CheckoutEntryController():
+
+    @Slot(str)
+    def showOpenBodyDialog(self, path):
+        print("\nWould have opened" + path)
+        return
 
         try:
             print("started from the bottom now we here")
@@ -29,8 +49,12 @@ class CheckoutEntryController():
             print("This is an exception: ", e)
             traceback.print_exc()
 
-    #@Slot()
-    def showSyncBodyDialog(self):
+    @Slot(list)
+    def showSyncBodyDialog(self, paths):
+        print("\nWould have synced")
+        print(paths)
+        return
+
         user = os.environ["USER"]
         print(user)
         conflicts = checkSyncConflictBody(self.body.path,user)
@@ -55,8 +79,12 @@ class CheckoutEntryController():
         syncDialog.addButton(QtWidgets.QPushButton("Keep My Changes"), QtWidgets.QMessageBox.ButtonRole.AcceptRole)
         syncDialog.exec_()
 
-    #@Slot()
-    def showDeleteBodyDialog(self):
+    @Slot(list)
+    def showDeleteBodyDialog(self, paths):
+        print("\nWould have deleted")
+        print(paths)
+        return
+
         syncDialog = CheckoutSyncDialog(self.body.path)
         syncDialog.exec_()
 

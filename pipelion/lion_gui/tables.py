@@ -4,11 +4,12 @@ try:
     from PySide import QtGui as QtWidgets
     from PySide import QtGui as QtGui
     from PySide import QtCore
-    from PySide.QtCore import Slot
+    from PySide.QtCore import Slot, Signal
 except ImportError:
     from PySide2 import QtWidgets, QtGui, QtCore
-    from PySide2.QtCore import Slot
+    from PySide2.QtCore import Slot, Signal
 from resources import Styles
+import random
 
 class TableData():
     # Data members that act as keys in a dictionary
@@ -17,6 +18,8 @@ class TableData():
     Style = "style"
     DisabledStyle = "disabled_style"
     Action = "action"
+    Role = "role"
+    Controller = "controller"
 
     # Data members for labels
     ResizeMode = "resize_policy"
@@ -24,6 +27,14 @@ class TableData():
     class WidgetTypes():
         Label = 0
         Button = 1
+
+    class ButtonRoles():
+        Open = "openButton"
+        Sync = "syncButton"
+        Delete = "deleteButton"
+        Checkout = "checkoutButton"
+        Rename = "renameButton"
+        UserDelete = "userDelete"
 
     @staticmethod
     def labelEntry(label):
@@ -40,12 +51,15 @@ class TableData():
         return header
 
     @staticmethod
-    def buttonEntry(label, style, disabledStyle, action=None):
+    def buttonEntry(label, style, disabledStyle, role, controller, action=None, userDelete=False):
         entry = {}
         entry[TableData.WidgetType] = TableData.WidgetTypes.Button
         entry[TableData.Label] = label
         entry[TableData.Style] = style
         entry[TableData.DisabledStyle] = disabledStyle
+        entry[TableData.Role] = role
+        entry[TableData.Controller] = controller
+        entry["userDelete"] = userDelete
         if action is not None:
             entry[TableData.Action] = action
         return entry
@@ -91,11 +105,6 @@ class TableLabel(QtWidgets.QLabel):
 
 class TableButton(QtWidgets.QPushButton):
 
-    class Role:
-        OpenButton = "openButton"
-        SyncButton = "syncButton"
-        DeleteButton = "deleteButton"
-
     def __init__(self, data):
         super(TableButton, self).__init__()
         self.setData(data)
@@ -106,6 +115,8 @@ class TableButton(QtWidgets.QPushButton):
         self.setEnabledStyle(False)
         if TableData.Action in self.data:
             self.clicked.connect(self.data[TableData.Action])
+        self.objectName = self.data[TableData.Role] if not data["userDelete"] else "userDelete"
+        self.userDelete = data["userDelete"]
 
     def setAction(self, newAction):
         self.clicked.disconnect(self.data[TableData.Action])
@@ -122,7 +133,15 @@ class TableButton(QtWidgets.QPushButton):
 
         self.setEnabled(enabled)
 
+
 class TableBar(QtWidgets.QLabel):
+    open = Signal(str)
+    sync = Signal(list)
+    deleteUserBody = Signal(list)
+    deleteBody = Signal(list)
+    checkout = Signal(list)
+    rename = Signal(str)
+
     def __init__(self, buttonEntries):
         super(TableBar, self).__init__()
         layout = QtWidgets.QHBoxLayout()
@@ -130,6 +149,26 @@ class TableBar(QtWidgets.QLabel):
         for buttonEntry in buttonEntries:
             if buttonEntry is not None:
                 print (buttonEntry)
+                if buttonEntry[TableData.Role] == TableData.ButtonRoles.Open:
+                    print("\n" * 20)
+                    print(buttonEntry[TableData.Controller])
+                    self.checkoutEntryController = buttonEntry[TableData.Controller]
+                    print (buttonEntry[TableData.Action])
+                    print("\n" * 20)
+                    self.open.connect(buttonEntry[TableData.Action])
+                if buttonEntry[TableData.Role] == TableData.ButtonRoles.Sync:
+                    self.sync.connect(buttonEntry[TableData.Action])
+                if buttonEntry[TableData.Role] == TableData.ButtonRoles.Delete:
+                    self.deleteBody.connect(buttonEntry[TableData.Action])
+                if buttonEntry[TableData.Role] == TableData.ButtonRoles.Delete and buttonEntry["userDelete"]:
+                    self.deleteUserBody.connect(buttonEntry[TableData.Action])
+                if buttonEntry[TableData.Role] == TableData.ButtonRoles.Checkout:
+                    self.bodyOverviewController = buttonEntry[TableData.Controller]
+                    self.checkout.connect(buttonEntry[TableData.Action])
+                if buttonEntry[TableData.Role] == TableData.ButtonRoles.Rename:
+                    self.rename.connect(buttonEntry[TableData.Action])
+
+                buttonEntry[TableData.Action] = self.buttonClicked
                 tableButton = TableButton(buttonEntry)
                 tableButton.setFixedHeight(20)
                 tableButton.setEnabledStyle(False)
@@ -150,13 +189,77 @@ class TableBar(QtWidgets.QLabel):
         self.table.itemSelectionChanged.connect(self.selectionChanged)
 
     @Slot()
+    def buttonClicked(self):
+        objectName = self.sender().objectName
+        print(objectName)
+        if objectName == TableData.ButtonRoles.Open:
+            print (self.checkoutEntryController)
+            try:
+                self.open.emit(self.paths[0])
+            except Exception as e:
+                print(e)
+
+        if objectName == TableData.ButtonRoles.Sync:
+            self.sync.emit(self.paths)
+        if objectName == TableData.ButtonRoles.Delete:
+            self.deleteBody.emit(self.paths)
+        if objectName == "userDelete":
+            self.deleteUserBody.emit(self.paths)
+        if objectName == TableData.ButtonRoles.Checkout:
+            self.checkout.emit(self.paths)
+        if objectName == TableData.ButtonRoles.Rename:
+            self.rename.emit(self.paths[0])
+
+
+    @Slot()
     def selectionChanged(self):
         print(self.table.selectedRanges())
         rowCount = 0
-        for range in self.table.selectedRanges():
-            rowCount += range.rowCount()
-        if (rowCount == 1):
-            print("things")
+        self.rows = []
+        self.paths = []
+        for selectedRange in self.table.selectedRanges():
+            rowCount += selectedRange.rowCount()
+            for i in range(0, selectedRange.rowCount()):
+                self.rows.append(selectedRange.topRow() + i)
+                path = self.table.model.entries[selectedRange.topRow() + i][0]
+                self.paths.append(path)
+
+        for tableButton in self.tableButtons:
+            if tableButton.data[TableData.Role] == TableData.ButtonRoles.Open:
+                if (rowCount == 1):
+                    tableButton.setEnabledStyle(True)
+                else:
+                    tableButton.setEnabledStyle(False)
+                #things
+            if tableButton.data[TableData.Role] == TableData.ButtonRoles.Sync:
+                if (rowCount > 0):
+                    show = False
+                    for path in self.paths:
+                        print("Syncing " + path)
+                        #Should show if some of them are syncable
+                    tableButton.setEnabledStyle(show)
+                else:
+                    tableButton.setEnabledStyle(False)
+                #Things
+            if tableButton.data[TableData.Role] == TableData.ButtonRoles.Delete:
+                if (rowCount > 0):
+                    tableButton.setEnabledStyle(True)
+                else:
+                    tableButton.setEnabledStyle(False)
+
+            if tableButton.data[TableData.Role] == TableData.ButtonRoles.Checkout:
+                if (rowCount > 0):
+                    show = False
+                    for path in self.paths:
+                        print("Syncing " + path)
+                        #Should show if some of them are syncable
+                    tableButton.setEnabledStyle(show)
+
+            if tableButton.data[TableData.Role] == TableData.ButtonRoles.Rename:
+                if (rowCount == 1):
+                    tableButton.setEnabledStyle(True)
+                else:
+                    tableButton.setEnabledStyle(False)
 
 
 class TableModel(QtCore.QAbstractTableModel):
