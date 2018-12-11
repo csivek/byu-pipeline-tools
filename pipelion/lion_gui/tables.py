@@ -97,6 +97,10 @@ class TableButton(QtWidgets.QPushButton):
         if TableData.Action in data:
             self.clicked.connect(data[TableData.Action])
 
+class TableBar:
+    def __init__(self, buttonEntry):
+        self.tableEntry = TableEntry(buttonEntry)
+
 class TableModel():
     def __init__(self, entryData, headers):
         #print("\n\n\nTABLE MODEL\n\n\n")
