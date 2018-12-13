@@ -248,7 +248,7 @@ class TableBar(QtWidgets.QLabel):
                     tableButton.setEnabledStyle(False)
 
             if tableButton.data[TableData.Role] == TableData.ButtonRoles.Checkout:
-                if (rowCount == 1):
+                if (rowCount > 0):
                     tableButton.setEnabledStyle(True)
                 else:
                     tableButton.setEnabledStyle(False)
@@ -324,4 +324,5 @@ class Table(QtWidgets.QTableWidget):
 
         #self.resizeColumnsToContents()
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers);
         self.update()

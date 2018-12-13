@@ -20,6 +20,8 @@ class ViewModelSignals(QObject):
     updateProduction = Signal(str)
     updateDepartment = Signal(str)
     updateBody = Signal(str)
+    updateCheckedOutBodies = Signal(dict)
+    updateOverviewBodies = Signal(tuple, dict)
 
 this = sys.modules[__name__]
 
@@ -46,15 +48,23 @@ def productionUpdate(update):
     this.signals.updateProduction.emit(update)
     this.signals.updateDepartment.emit(update)
     this.signals.updateBody.emit(update)
+    this.signals.updateCheckedOutBodies.emit(this.getCheckedOutBodies())
+    for bodyType in PipelionResources.bodyTypes():
+        this.signals.updateOverviewBodies.emit(bodyType, this.getOverviewBodies(bodyType))
 
 def printThings():
     print("Things")
 
-def checkedOutButtons():
+def getCheckedOutBodies():
     bodies = {}
     for body in this.userBodies:
         bodies[body.path] = body
+    return bodies
+
+def checkedOutButtons():
+    bodies = this.getCheckedOutBodies()
     controller = CheckoutEntryController(bodies)
+    this.signals.updateCheckedOutBodies.connect(controller.bodyUpdate)
     buttons = []
     buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, Styles().disabledButton, TableData.ButtonRoles.Open, controller, controller.showOpenBodyDialog))
     buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, Styles().disabledButton, TableData.ButtonRoles.Sync, controller, controller.showSyncBodyDialog))
@@ -62,12 +72,17 @@ def checkedOutButtons():
     buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, Styles().disabledButton, TableData.ButtonRoles.Delete, controller, controller.showDeleteBodyDialog, True))
     return buttons
 
-def bodyOverViewButtons(bodyType):
+def getOverviewBodies(bodyType):
     bodyList = [body for body in this.allBodies if body.type[0] == bodyType[0]]
     bodies = {}
     for body in bodyList:
         bodies[body.path] = body
-    controller = BodyOverviewController(bodies)
+    return bodies
+
+def bodyOverViewButtons(bodyType):
+    bodies = this.getOverviewBodies(bodyType)
+    controller = BodyOverviewController(bodyType, bodies)
+    this.signals.updateOverviewBodies.connect(controller.bodyUpdate)
     buttons = []
     buttons.append(TableData.buttonEntry(Strings.checkout, Styles().checkoutButton, Styles().disabledButton, TableData.ButtonRoles.Checkout, controller, controller.showCheckoutDialog))
     buttons.append(TableData.buttonEntry(Strings.rename, Styles().renameButton, Styles().disabledButton, TableData.ButtonRoles.Rename, controller, controller.showRenameDialog))

@@ -9,11 +9,16 @@ from .files import *
 
 
 def cloneDataToUser(body, user):
-	body.addHistory(History("body", "CHECKOUT", time.time(), user, "Checked out " + body.type[0]))
-	userBody = Body(UserRoot(user), body.type, body.path)
-	userBody.initializeDepartments(body.getDepartments())
-	copy_directory(body.getMyLocation(), userBody.getMyLocation())
-	userBody.writeSelfToFile()
+	try:
+		body.addHistory(History("body", "CHECKOUT", time.time(), user, "Checked out " + body.type[0]))
+		userBody = Body(UserRoot(user), body.type, body.path)
+		userBody.initializeDepartments(body.getDepartments())
+		copy_directory(body.getMyLocation(), userBody.getMyLocation())
+		userBody.writeSelfToFile()
+	except Exception as e:
+		print(e)
+		return False
+	return True
 
 
 def renameBody(old_body, new_path):

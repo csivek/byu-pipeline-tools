@@ -16,18 +16,36 @@ from programWidget import ProgramShelfWidget
 from pipelion.lion_mng.writer import cloneDataToUser
 
 class BodyOverviewController():
-    def __init__(self, bodies):
+    def __init__(self, bodyType, bodies):
+        self.bodyType = bodyType
         self.bodies = bodies
 
     @Slot(list)
+    def bodyUpdate(self, bodyType, bodies):
+        if self.bodyType[0] == bodyType[0]:
+            self.bodies = bodies
+
+    @Slot(list)
     def showCheckoutDialog(self, paths):
+        totalcount = 0
+        succeeded = 0
         for path in paths:
-            cloneDataToUser(self.bodies[path], os.environ["USER"])
+            if(cloneDataToUser(self.bodies[path], os.environ["USER"])):
+                succeeded += 1
+            totalcount += 1
+        msgBox = QtWidgets.QMessageBox()
+        if succeeded == totalcount:
+            msgBox.setIcon(QtWidgets.QMessageBox.Information)
+            msgBox.setInformativeText(str(succeeded) + " item(s) checked out")
+        else:
+            msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+            msgBox.setInformativeText(str(succeeded) + " item(s) checked out, " + str(totalcount - succeeded) + " failed.")
+
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.exec_()
 
     @Slot(str)
     def showRenameDialog(self, path):
-        print("\nWould have renamed")
-        print(path)
         return
 
     @Slot(list)
@@ -49,6 +67,11 @@ class BodyOverviewController():
 class CheckoutEntryController():
     def __init__(self, bodies):
         self.bodies = bodies
+
+    @Slot(list)
+    def bodyUpdate(self, bodies):
+        self.bodies = bodies
+
     @Slot(str)
     def showOpenBodyDialog(self, path):
 
@@ -168,6 +191,34 @@ class CheckoutSyncDialog(QtWidgets.QMessageBox):
         super(CheckoutSyncDialog, self).__init__()
         self.body = body
         self.conflicts = conflicts
+
+class RenameBodyDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super(CreateBodyDialog, self).__init__()
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(QtWidgets.QLabel("Please enter a new name for your asset"))
+        self.assetName = QtWidgets.QLineEdit(self)
+        self.assetName.textChanged.connect(self.checkNameValidity)
+        self.assetName.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("[A-Za-z0-9_]+")))
+        layout.addWidget(self.assetName)
+
+        hlayout = QtWidgets.QHBoxLayout()
+        self.createButton = QtWidgets.QPushButton("Rename")
+        self.createButton.setEnabled(False)
+        self.createButton.clicked.connect(self.accept)
+        self.cancelButton = QtWidgets.QPushButton("Cancel")
+        self.cancelButton.clicked.connect(self.reject)
+        hlayout.addWidget(self.createButton)
+        hlayout.addWidget(self.cancelButton)
+
+        layout.addLayout(hlayout)
+        self.setLayout(layout)
+
+    def checkNameValidity(self, text):
+        if len(text) < 1 or text[0].isdigit():
+            self.createButton.setEnabled(False)
+        else:
+            self.createButton.setEnabled(True)
 
 class CreateBodyDialog(QtWidgets.QDialog):
     def __init__(self):

@@ -11,3 +11,6 @@ source ${DIR}/project_env.sh
 export PYTHONPATH=$PYTHONPATH:/opt/hfs.current/python/lib/python2.7/site-packages-ui-forced
 export QT_QPA_PLATFORM_PLUGIN_PATH=/opt/hfs.current/dsolib/Qt_plugins/platforms
 export PATH=/opt/hfs.current/python/bin:$PATH
+
+# Run main.py
+python ${BYU_TOOLS_DIR}/pipelion/lion_gui/main.py &
