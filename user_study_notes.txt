@@ -1,0 +1,8 @@
+Please open Houdini
+Please select Delilah and open her in Maya
+Please navigate to the asset overview page
+Please create a couple assets
+Delete multiple
+Now check one of them out
+Now navigate to the dashboard again
+Now delete it from your checked out items
