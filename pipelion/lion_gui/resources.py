@@ -40,12 +40,13 @@ class PipelionResources():
         return True
 
 class Strings():
+    remove = "Remove"
     dashboard = "Dashboard"
     settings = "Settings"
     admin_tools = "Admin Tools"
     shortcuts = "Shortcuts"
     checkedoutitems = "Checked Out Items"
-    open = "Open..."
+    open = "Open In..."
     sync = "Sync"
     nochanges = "No Changes"
     delete = "Delete"
@@ -75,6 +76,10 @@ class Styles():
     renameButton = '''
         background-color: purple;
         color: white
+    '''
+    createButton = '''
+        background-color: skyblue;
+
     '''
 
     changeButton = '''

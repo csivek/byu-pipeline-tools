@@ -11,6 +11,7 @@ except ImportError:
 
 from resources import *
 from pages import *
+import viewmodel as ViewModel
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -70,12 +71,14 @@ class SideBarLink(QtWidgets.QLabel):
         self.selected = selected
         self.update()
 
+
 class SideBarLayout(QtWidgets.QVBoxLayout):
     def __init__(self, screenLayout):
         super(SideBarLayout, self).__init__()
         self.screenLayout = screenLayout
         self.links = []
         self.initialLayout()
+        ViewModel.signals.changePage.connect(self.changePage)
 
     def initialLayout(self):
         self.setSpacing(0)
@@ -101,3 +104,7 @@ class SideBarLayout(QtWidgets.QVBoxLayout):
         logoWidget.setPixmap(QtGui.QPixmap.fromImage(logoImage).scaled(size,size))
         logoWidget.setObjectName("logo")
         return logoWidget
+
+    @Slot(int, list)
+    def changePage(self, index, bodies):
+        self.updateViews(index)

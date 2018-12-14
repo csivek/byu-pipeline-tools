@@ -22,6 +22,7 @@ class ViewModelSignals(QObject):
     updateBody = Signal(str)
     updateCheckedOutBodies = Signal(dict)
     updateOverviewBodies = Signal(tuple, dict)
+    changePage = Signal(int, list)
 
 this = sys.modules[__name__]
 
@@ -69,7 +70,7 @@ def checkedOutButtons():
     buttons.append(TableData.buttonEntry(Strings.open, Styles().openButton, Styles().disabledButton, TableData.ButtonRoles.Open, controller, controller.showOpenBodyDialog))
     buttons.append(TableData.buttonEntry(Strings.sync, Styles().syncButton, Styles().disabledButton, TableData.ButtonRoles.Sync, controller, controller.showSyncBodyDialog))
     buttons.append(None)
-    buttons.append(TableData.buttonEntry(Strings.delete, Styles().deleteButton, Styles().disabledButton, TableData.ButtonRoles.Delete, controller, controller.showDeleteBodyDialog, True))
+    buttons.append(TableData.buttonEntry(Strings.remove, Styles().deleteButton, Styles().disabledButton, TableData.ButtonRoles.Delete, controller, controller.showDeleteBodyDialog, True))
     return buttons
 
 def getOverviewBodies(bodyType):

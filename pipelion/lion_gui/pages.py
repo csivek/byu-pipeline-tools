@@ -115,6 +115,16 @@ class BodyOverviewPage(PageWidget):
 
     def layoutPage(self):
         pageLayout = QtWidgets.QVBoxLayout()
+        hlayout = QtWidgets.QHBoxLayout()
+        hlayout.addStretch()
+        createButton = QtWidgets.QPushButton("Create " + self.bodyType[1])
+        createButton.clicked.connect(self.cbc.showCreateBodyDialog)
+        createButton.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        createButton.setFixedHeight(60)
+        createButton.setStyleSheet(Styles.createButton)
+        hlayout.addWidget(createButton)
+        hlayout.addStretch()
+        pageLayout.addLayout(hlayout)
         self.tableStack = QtWidgets.QStackedWidget()
         entries, headers = ViewModel.bodyOverviewTable(self.bodyType)
         noAssetView = QtWidgets.QLabel("This is a body overview page for " + self.pageLabel)
@@ -128,9 +138,6 @@ class BodyOverviewPage(PageWidget):
         self.tableStack.addWidget(self.table)
         self.tableStack.setCurrentIndex(1 if len(entries) > 0 else 0)
         pageLayout.addWidget(self.tableStack)
-        createButton = QtWidgets.QPushButton("Create " + self.bodyType[1])
-        createButton.clicked.connect(self.cbc.showCreateBodyDialog)
-        pageLayout.addWidget(createButton)
         return pageLayout
 
     @Slot(str)

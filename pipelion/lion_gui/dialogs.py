@@ -14,6 +14,7 @@ from pipelion.lion_mng.reader import *
 from pipelion.lion_mng.body import Body
 from programWidget import ProgramShelfWidget
 from pipelion.lion_mng.writer import cloneDataToUser
+import viewmodel as ViewModel
 
 class BodyOverviewController():
     def __init__(self, bodyType, bodies):
@@ -37,6 +38,7 @@ class BodyOverviewController():
         if succeeded == totalcount:
             msgBox.setIcon(QtWidgets.QMessageBox.Information)
             msgBox.setInformativeText(str(succeeded) + " item(s) checked out")
+            ViewModel.signals.changePage.emit(0, self.bodies)
         else:
             msgBox.setIcon(QtWidgets.QMessageBox.Warning)
             msgBox.setInformativeText(str(succeeded) + " item(s) checked out, " + str(totalcount - succeeded) + " failed.")
@@ -50,7 +52,7 @@ class BodyOverviewController():
 
     @Slot(list)
     def showDeleteBodyDialog(self, paths):
-        delete_msg = "Are you sure you want to delete " + str(len(paths)) + " asset(s)"
+        delete_msg = "Are you sure you want to delete " + str(len(paths)) + " asset(s) from the entire production?"
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Question)
         msgBox.setText("Delete")
@@ -115,7 +117,7 @@ class CheckoutEntryController():
 
     @Slot(list)
     def showDeleteBodyDialog(self, paths):
-        delete_msg = "Are you sure you want to delete " + str(len(paths)) + " asset(s)"
+        delete_msg = "Are you sure you want to delete " + str(len(paths)) + " asset(s) from your local repository?"
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Question)
         msgBox.setText("Delete")

@@ -1,5 +1,7 @@
 Please open Houdini
-Please select Delilah and open her in Maya
+Close Houdini
+Please select Delilah and open her in Modeling in Maya
+Close Maya
 Please navigate to the asset overview page
 Please create a couple assets
 Delete multiple
